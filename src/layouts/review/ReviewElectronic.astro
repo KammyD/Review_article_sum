@@ -1,0 +1,100 @@
+---
+/**
+ * ReviewElectronic.astro — 评测页 T5：电子/数码风
+ * 深灰精密 + 参数规格驱动 + 科技感
+ */
+import BaseLayout from '../BaseLayout.astro';
+import StarRating from '../../components/StarRating.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import UserReviews from '../../components/UserReviews.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages = [] } = Astro.props;
+const aff  = product?.affiliate;
+const hero = page.hero ?? {};
+const crumbs = [{ name:'首页',url:'/' },{ name:'评测',url:'/review' },{ name:product?.name??page.slug,url:'#' }];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+  <section class="hero-elec">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      {hero.badge_text && <span class="elec-badge">{hero.badge_text}</span>}
+      <!-- 第一层 H1 -->
+      <h1 class="elec-h1">{page.seo.on_page.h1}</h1>
+      <p class="elec-sub">{hero.subheadline}</p>
+      <div class="elec-score">
+        <StarRating score={hero.score ?? product?.ratings?.overall ?? 4.5} size="lg" showNumber={false} />
+        <span class="elec-score-num">{(hero.score ?? product?.ratings?.overall ?? 4.5).toFixed(1)}/5.0</span>
+        {hero.verdict && <span class="elec-verdict">{hero.verdict}</span>}
+      </div>
+      <CTAButton href={aff?.link??'#'} text={hero.cta_primary_text??'查看最低价'} affiliateId={aff?.id} position="hero" style="primary" />
+    </div>
+  </section>
+  <div class="container">
+    {product?.performance && (
+      <section class="elec-specs section">
+        <h2 class="section-title">核心参数</h2>
+        <div class="specs-grid">
+          {product.performance.avg_speed_mbps && (
+            <div class="spec-card"><span class="spec-val">{product.performance.avg_speed_mbps}</span><span class="spec-unit">Mbps</span><span class="spec-label">平均速度</span></div>
+          )}
+          {product.performance.avg_latency_ms && (
+            <div class="spec-card"><span class="spec-val">{product.performance.avg_latency_ms}</span><span class="spec-unit">ms</span><span class="spec-label">延迟</span></div>
+          )}
+          {product.performance.server_count && (
+            <div class="spec-card"><span class="spec-val">{product.performance.server_count.toLocaleString()}</span><span class="spec-unit">+</span><span class="spec-label">服务器</span></div>
+          )}
+          {product.performance.country_count && (
+            <div class="spec-card"><span class="spec-val">{product.performance.country_count}</span><span class="spec-unit">国</span><span class="spec-label">覆盖范围</span></div>
+          )}
+        </div>
+      </section>
+    )}
+    {page.summary_box && (
+      <section class="elec-summary section">
+        <h2 class="section-title">{page.summary_box.title}</h2>
+        <ul class="elec-list">{page.summary_box.points.map((p:string)=><li>{p}</li>)}</ul>
+      </section>
+    )}
+    {page.content_sections?.map((sec:any)=>(
+      <section class="section" id={sec.id}>
+        <h2 class="section-title">{sec.title}</h2>
+        <div class="prose"><p>{sec.body}</p></div>
+      </section>
+    ))}
+    {reviews && (<section class="section"><h2 class="section-title">用户评测</h2><UserReviews reviews={reviews} /></section>)}
+    {page.faqs?.length && (<section class="section"><h2 class="section-title">常见问题</h2><FAQAccordion faqs={page.faqs} /></section>)}
+    <section class="elec-cta section">
+      <div class="elec-cta-inner">
+        <h2>查看最新价格</h2>
+        <CTAButton href={aff?.link??'#'} text={hero.cta_primary_text??'立即购买'} affiliateId={aff?.id} position="end" style="primary" />
+        {product?.pricing?.money_back_days && <p class="elec-guarantee">✓ {product.pricing.money_back_days}天退款保证</p>}
+      </div>
+    </section>
+    {page.related_pages?.length && (<section class="section"><h2 class="section-title">相关推荐</h2><RelatedPages relatedSlugs={page.related_pages} allPages={allPages} /></section>)}
+  </div>
+</BaseLayout>
+<style>
+.hero-elec { background:#0f172a; color:#e2e8f0; padding:48px 0 36px; }
+.elec-badge{ display:inline-block; padding:4px 12px; background:#3b82f6; color:#fff; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.05em; margin-bottom:12px; text-transform:uppercase; }
+.elec-h1  { font-size:clamp(1.4rem,3vw,2rem); font-weight:800; color:#f1f5f9; margin:0 0 10px; line-height:1.25; }
+.elec-sub { color:#94a3b8; margin:0 0 14px; }
+.elec-score { display:flex; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+.elec-score-num { font-size:1.5rem; font-weight:700; color:#38bdf8; }
+.elec-verdict { padding:4px 12px; background:#1e3a5f; color:#38bdf8; border-radius:4px; font-size:13px; font-weight:600; }
+.specs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+.spec-card  { background:#0f172a; border:1px solid #334155; border-radius:8px; padding:16px; text-align:center; }
+.spec-val   { display:block; font-size:2rem; font-weight:800; color:#38bdf8; }
+.spec-unit  { color:#64748b; font-size:13px; }
+.spec-label { display:block; font-size:12px; color:#94a3b8; margin-top:4px; }
+.elec-summary { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:24px; }
+.elec-list  { margin:0; padding-left:20px; }
+.elec-list li { margin-bottom:8px; color:#374151; }
+.elec-cta  { background:#0f172a; border-radius:12px; }
+.elec-cta-inner { text-align:center; padding:36px 20px; }
+.elec-cta-inner h2 { font-size:1.4rem; font-weight:700; color:#f1f5f9; margin:0 0 16px; }
+.elec-guarantee { font-size:13px; color:#38bdf8; margin-top:10px; }
+</style>

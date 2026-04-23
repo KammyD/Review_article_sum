@@ -1,0 +1,38 @@
+---
+interface Props { relatedSlugs: string[]; allPages: any[]; }
+const { relatedSlugs, allPages } = Astro.props;
+const related = relatedSlugs
+  .map(slug => allPages.find((p: any) => p.data.slug === slug))
+  .filter(Boolean)
+  .slice(0, 4);
+const typeLabel: Record<string, string> = {
+  review: '评测', deal: '优惠', 'best-of': '榜单', 'how-to': '教程', brand: '品牌',
+};
+const typeUrl: Record<string, string> = {
+  review: '/review', deal: '/deals', 'best-of': '/best', 'how-to': '/how-to', brand: '/brand',
+};
+---
+{related.length > 0 && (
+  <div class="related-grid">
+    {related.map((p: any) => (
+      <a href={`${typeUrl[p.data.page_type]}/${p.data.slug}`} class="related-card">
+        <span class="related-type">{typeLabel[p.data.page_type]}</span>
+        <span class="related-title">{p.data.seo.on_page.h1}</span>
+        <span class="related-arrow">→</span>
+      </a>
+    ))}
+  </div>
+)}
+
+<style>
+.related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+.related-card {
+  display:flex; flex-direction:column; gap:6px; padding:16px;
+  border:1px solid var(--border,#e5e7eb); border-radius:10px; text-decoration:none;
+  color:var(--text,#111827); background:#fff; transition:border-color 0.2s, box-shadow 0.2s;
+}
+.related-card:hover { border-color:var(--accent,#16a34a); box-shadow:0 2px 8px rgba(22,163,74,0.1); }
+.related-type  { font-size:11px; font-weight:600; color:var(--accent,#16a34a); text-transform:uppercase; letter-spacing:0.05em; }
+.related-title { font-size:13px; line-height:1.4; font-weight:500; }
+.related-arrow { font-size:13px; color:#9ca3af; margin-top:4px; }
+</style>

@@ -1,0 +1,76 @@
+---
+/**
+ * ReviewFood.astro — 评测页 T3：食品/健康风
+ * 清新绿白 + 成分分析 + 医学可信赖
+ * 适用：保健品、有机食品、减肥产品、蛋白粉、功能饮料
+ */
+import BaseLayout from '../BaseLayout.astro';
+import StarRating from '../../components/StarRating.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import TrustBadges from '../../components/TrustBadges.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import UserReviews from '../../components/UserReviews.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages = [] } = Astro.props;
+const aff  = product?.affiliate;
+const hero = page.hero ?? {};
+const crumbs = [{ name:'首页',url:'/' },{ name:'评测',url:'/review' },{ name:product?.name??page.slug,url:'#' }];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+  <section class="hero-food">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      {hero.badge_text && <span class="food-badge">{hero.badge_text}</span>}
+      <!-- 第一层 H1 -->
+      <h1 class="food-h1">{page.seo.on_page.h1}</h1>
+      <p class="food-sub">{hero.subheadline}</p>
+      <div class="food-score">
+        <StarRating score={hero.score ?? product?.ratings?.overall ?? 4.5} size="lg" />
+        {hero.verdict && <span class="food-verdict">{hero.verdict}</span>}
+      </div>
+      <CTAButton href={aff?.link??'#'} text={hero.cta_primary_text??'立即查看'} affiliateId={aff?.id} position="hero" style="primary" />
+      <TrustBadges moneyBackDays={product?.pricing?.money_back_days} showAudit={false} />
+    </div>
+  </section>
+  <div class="container">
+    {page.summary_box && (
+      <section class="food-summary section">
+        <h2 class="section-title">{page.summary_box.title}</h2>
+        <ul>{page.summary_box.points.map((p:string)=><li class="food-point">{p}</li>)}</ul>
+      </section>
+    )}
+    {page.content_sections?.map((sec:any)=>(
+      <section class="section" id={sec.id}>
+        <h2 class="section-title">{sec.title}</h2>
+        <div class="prose"><p>{sec.body}</p></div>
+      </section>
+    ))}
+    {reviews && (<section class="section"><h2 class="section-title">用户真实评价</h2><UserReviews reviews={reviews} /></section>)}
+    {page.faqs?.length && (<section class="section"><h2 class="section-title">常见问题</h2><FAQAccordion faqs={page.faqs} /></section>)}
+    <section class="food-cta section">
+      <div class="food-cta-inner">
+        <h2>立即体验</h2>
+        <CTAButton href={aff?.link??'#'} text={hero.cta_primary_text??'立即购买'} affiliateId={aff?.id} position="end" style="primary" />
+        {product?.pricing?.money_back_days && <p class="food-guarantee">✓ {product.pricing.money_back_days}天退款保证</p>}
+      </div>
+    </section>
+    {page.related_pages?.length && (<section class="section"><h2 class="section-title">相关推荐</h2><RelatedPages relatedSlugs={page.related_pages} allPages={allPages} /></section>)}
+  </div>
+</BaseLayout>
+<style>
+.hero-food { background:#f0fdf4; border-bottom:1px solid #bbf7d0; padding:48px 0 36px; }
+.food-badge{ display:inline-block; padding:4px 12px; background:#16a34a; color:#fff; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:12px; }
+.food-h1  { font-size:clamp(1.4rem,3vw,2rem); font-weight:800; color:#14532d; margin:0 0 10px; }
+.food-sub { color:#4d7c0f; margin:0 0 14px; }
+.food-score { display:flex; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+.food-verdict { padding:4px 12px; background:#dcfce7; color:#15803d; border-radius:6px; font-size:13px; font-weight:600; }
+.food-summary { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:24px; }
+.food-point { margin-bottom:10px; color:#166534; }
+.food-cta { background:#f0fdf4; border-radius:14px; }
+.food-cta-inner { text-align:center; padding:36px 20px; }
+.food-cta-inner h2 { font-size:1.4rem; font-weight:700; color:#14532d; margin:0 0 16px; }
+.food-guarantee { font-size:13px; color:#16a34a; margin-top:10px; }
+</style>

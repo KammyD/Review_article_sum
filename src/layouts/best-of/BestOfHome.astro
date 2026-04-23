@@ -1,0 +1,6 @@
+---
+import BestOfTech from './BestOfTech.astro';
+interface Props { page: any; product?: any; reviews?: any; allPages?: any[]; allProducts?: any[]; }
+const { page, product, reviews, allPages, allProducts } = Astro.props;
+---
+<BestOfTech page={page} product={product} reviews={reviews} allPages={allPages} allProducts={allProducts} />

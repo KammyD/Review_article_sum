@@ -1,0 +1,51 @@
+---
+/**
+ * pages/brand/[slug].astro
+ * 品牌专属页动态路由
+ */
+import { getCollection, getEntry } from 'astro:content';
+
+import BrandTech       from '../../layouts/brand/BrandTech.astro';
+import BrandHome       from '../../layouts/brand/BrandHome.astro';
+import BrandFood       from '../../layouts/brand/BrandFood.astro';
+import BrandPet        from '../../layouts/brand/BrandPet.astro';
+import BrandElectronic from '../../layouts/brand/BrandElectronic.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => data.page_type === 'brand' && data.meta.published);
+  return pages.map(page => ({
+    params: { slug: page.data.slug },
+    props: { pageData: page.data },
+  }));
+}
+
+const { pageData } = Astro.props;
+
+const productEntry = pageData.product_ref
+  ? await getEntry('products', pageData.product_ref)
+  : null;
+
+const reviewsEntry = pageData.product_ref
+  ? await getEntry('reviews', `${pageData.product_ref}-reviews`).catch(() => null)
+  : null;
+
+const allPages = await getCollection('pages', ({ data }) => data.meta.published);
+
+const layoutMap: Record<string, any> = {
+  tech:       BrandTech,
+  home:       BrandHome,
+  food:       BrandFood,
+  pet:        BrandPet,
+  electronic: BrandElectronic,
+};
+const Layout = layoutMap[pageData.template_style] ?? BrandTech;
+
+const product = productEntry?.data ?? null;
+const reviews = reviewsEntry?.data ?? null;
+---
+<Layout
+  page={pageData}
+  product={product}
+  reviews={reviews}
+  allPages={allPages}
+/>

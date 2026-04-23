@@ -1,0 +1,10 @@
+---
+// Deal${style}.astro — Same logic as DealTech, different color theme
+// Import DealTech and override CSS vars via wrapper class
+import DealTech from './DealTech.astro';
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages } = Astro.props;
+---
+<div class="theme-STYLE">
+  <DealTech page={page} product={product} reviews={reviews} allPages={allPages} />
+</div>

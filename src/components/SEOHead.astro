@@ -1,0 +1,231 @@
+---
+/**
+ * SEOHead.astro
+ * 五层 SEO 标签完整实现：
+ * 第四层 Meta 标签（title / description / OG / Twitter）
+ * 第五层 Schema 标记（JSON-LD，根据 page_type 自动选择类型）
+ *
+ * H1 / H2 / H3 在各 Layout 模板中渲染，不在此组件处理
+ */
+
+import siteConfig from '../config/seo.config.json';
+
+interface Props {
+  page: any;
+  product?: any;
+  reviews?: any;
+  breadcrumbs?: Array<{ name: string; url: string }>;
+}
+
+const { page, product, reviews, breadcrumbs = [] } = Astro.props;
+const site = siteConfig.site.domain;
+
+// ── Title（第四层：≤60字，主关键词靠前）
+const titleFull = page.seo.title + siteConfig.defaults.title_suffix;
+
+// ── Robots
+const robotsContent = [
+  page.seo.index !== false ? 'index' : 'noindex',
+  page.seo.follow !== false ? 'follow' : 'nofollow',
+].join(', ');
+
+// ── Canonical
+const canonicalUrl = site + page.seo.canonical;
+
+// ── OG
+const ogTitle = page.seo.og_title ?? page.seo.title;
+const ogDesc  = page.seo.og_description ?? page.seo.description;
+const ogImage = page.seo.og_image ? site + page.seo.og_image : site + siteConfig.site.default_og_image;
+
+// ──────────────────────────────────────────────
+// 第五层 Schema JSON-LD 构建函数
+// ──────────────────────────────────────────────
+
+function buildReviewSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    name: page.seo.on_page.h1,
+    itemReviewed: {
+      '@type': page.seo.schema.item_reviewed_type ?? 'Product',
+      name: page.seo.schema.item_reviewed_name,
+      ...(product?.pricing?.starting_from ? {
+        offers: {
+          '@type': 'Offer',
+          price: product.pricing.starting_from,
+          priceCurrency: product.pricing.currency ?? 'USD',
+        }
+      } : {}),
+    },
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: String(page.seo.schema.rating_value),
+      bestRating: String(page.seo.schema.best_rating ?? 5),
+      worstRating: String(page.seo.schema.worst_rating ?? 1),
+    },
+    reviewBody: page.seo.schema.review_body_summary ?? '',
+    author: siteConfig.schema_defaults.author,
+    publisher: siteConfig.schema_defaults.publisher,
+    datePublished: page.meta.publish_date,
+    dateModified: page.meta.update_date ?? page.meta.publish_date,
+  };
+}
+
+function buildProductSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product?.name ?? page.seo.schema.item_reviewed_name,
+    description: product?.description ?? '',
+    brand: { '@type': 'Brand', name: product?.name ?? '' },
+    offers: {
+      '@type': 'Offer',
+      url: canonicalUrl,
+      priceCurrency: product?.pricing?.currency ?? 'USD',
+      price: product?.pricing?.starting_from ?? '0',
+      priceValidUntil: product?.deal?.expires ?? '2025-12-31',
+      availability: 'https://schema.org/InStock',
+      seller: siteConfig.schema_defaults.publisher,
+    },
+    aggregateRating: reviews ? {
+      '@type': 'AggregateRating',
+      ratingValue: String(reviews.aggregate.score),
+      reviewCount: String(reviews.aggregate.total),
+    } : undefined,
+  };
+}
+
+function buildItemListSchema() {
+  const items = (page.ranked_items ?? []).map((item: any, i: number) => ({
+    '@type': 'ListItem',
+    position: item.rank ?? i + 1,
+    name: item.product_ref,
+    url: `${site}/review/${item.product_ref}-review`,
+  }));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: page.seo.on_page.h1,
+    description: page.seo.description,
+    numberOfItems: page.seo.schema.number_of_items ?? items.length,
+    itemListElement: items,
+  };
+}
+
+function buildHowToSchema() {
+  const steps = (page.steps ?? []).map((s: any) => ({
+    '@type': 'HowToStep',
+    position: s.position,
+    name: s.name,
+    text: s.text,
+    ...(s.image ? { image: site + s.image } : {}),
+  }));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: page.seo.on_page.h1,
+    description: page.seo.description,
+    totalTime: page.seo.schema.total_time ?? 'PT10M',
+    ...(page.seo.schema.estimated_cost_value ? {
+      estimatedCost: {
+        '@type': 'MonetaryAmount',
+        currency: page.seo.schema.estimated_cost_currency ?? 'USD',
+        value: page.seo.schema.estimated_cost_value,
+      }
+    } : {}),
+    step: steps,
+  };
+}
+
+function buildFAQSchema() {
+  if (!page.faqs?.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: page.faqs.map((faq: any) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+    })),
+  };
+}
+
+function buildBreadcrumbSchema() {
+  if (!breadcrumbs.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((b, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: b.name,
+      item: site + b.url,
+    })),
+  };
+}
+
+// 根据 page_type 选择主 Schema
+const schemaMap: Record<string, () => any> = {
+  review:   buildReviewSchema,
+  deal:     buildProductSchema,
+  'best-of': buildItemListSchema,
+  'how-to': buildHowToSchema,
+  brand:    buildProductSchema,
+};
+
+const schemas = [
+  schemaMap[page.page_type]?.(),
+  buildFAQSchema(),
+  buildBreadcrumbSchema(),
+].filter(Boolean);
+
+// ── Build-time SEO validation warnings
+if (titleFull.length > 60) {
+  console.warn(`[SEO] ${page.slug}: title ${titleFull.length}字，超过60字限制`);
+}
+if (page.seo.description.length > 160) {
+  console.warn(`[SEO] ${page.slug}: description ${page.seo.description.length}字，超过160字限制`);
+}
+---
+
+<!-- ═══ 第四层 Meta 标签 ═══ -->
+
+<!-- Title：主关键词必须在前30字，≤60字 -->
+<title>{titleFull}</title>
+
+<!-- Description：≤160字，含主关键词+价值点+CTA -->
+<meta name="description" content={page.seo.description} />
+
+<!-- Robots -->
+<meta name="robots" content={robotsContent} />
+
+<!-- Canonical：防止重复内容 -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- hreflang（单语言站点先配中文，未来多语言扩展） -->
+<link rel="alternate" hreflang="zh" href={canonicalUrl} />
+
+<!-- Open Graph：社交分享 -->
+<meta property="og:type"              content="article" />
+<meta property="og:title"             content={ogTitle} />
+<meta property="og:description"       content={ogDesc} />
+<meta property="og:image"             content={ogImage} />
+<meta property="og:url"               content={canonicalUrl} />
+<meta property="og:locale"            content="zh_CN" />
+<meta property="og:site_name"         content={siteConfig.site.name} />
+<meta property="article:published_time" content={page.meta.publish_date} />
+{page.meta.update_date && (
+  <meta property="article:modified_time" content={page.meta.update_date} />
+)}
+
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:site"        content={siteConfig.site.twitter_handle} />
+<meta name="twitter:title"       content={ogTitle} />
+<meta name="twitter:description" content={ogDesc} />
+<meta name="twitter:image"       content={ogImage} />
+
+<!-- ═══ 第五层 Schema JSON-LD ═══ -->
+{schemas.map(schema => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema, null, 0)} />
+))}

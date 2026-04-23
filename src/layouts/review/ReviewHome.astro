@@ -1,0 +1,138 @@
+---
+/**
+ * ReviewHome.astro — 评测页 T2：家居/生活风
+ * 温暖米色 + 大图沉浸 + 柔和圆角
+ * 适用：家居装饰、床品、厨房用品、扫地机器人、空气净化器
+ */
+import BaseLayout from '../BaseLayout.astro';
+import StarRating from '../../components/StarRating.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import TrustBadges from '../../components/TrustBadges.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import UserReviews from '../../components/UserReviews.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages = [] } = Astro.props;
+const aff  = product?.affiliate;
+const deal = product?.deal;
+const hero = page.hero ?? {};
+const crumbs = [
+  { name: '首页', url: '/' }, { name: '评测', url: '/review' },
+  { name: product?.name ?? page.slug, url: '#' },
+];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+
+  <!-- ══ HERO：暖米色大图风 ══ -->
+  <section class="hero-home">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      {hero.badge_text && <span class="home-badge">{hero.badge_text}</span>}
+      <!-- 第一层 H1 -->
+      <h1 class="home-h1">{page.seo.on_page.h1}</h1>
+      <p class="home-sub">{hero.subheadline}</p>
+      <div class="home-meta">
+        <StarRating score={hero.score ?? product?.ratings?.overall ?? 4.5} size="md" />
+        {hero.verdict && <span class="home-verdict">{hero.verdict}</span>}
+      </div>
+      <div class="home-ctas">
+        <CTAButton href={aff?.link ?? '#'} text={hero.cta_primary_text ?? '立即查看'} affiliateId={aff?.id} position="hero" style="primary" subText={hero.cta_primary_urgency} />
+      </div>
+      <TrustBadges moneyBackDays={product?.pricing?.money_back_days} mediaMentions={page.trust_signals?.media_mentions} />
+    </div>
+  </section>
+
+  <div class="container">
+
+    {page.summary_box && (
+      <section class="home-summary section">
+        <h2 class="section-title">{page.summary_box.title}</h2>
+        <ul class="home-summary-list">
+          {page.summary_box.points.map((pt: string) => <li>{pt}</li>)}
+        </ul>
+        {page.summary_box.bottom_line && <p class="home-bottom-line">{page.summary_box.bottom_line}</p>}
+      </section>
+    )}
+
+    {(product?.pros?.length || product?.cons?.length) && (
+      <section class="section">
+        <h2 class="section-title">优缺点</h2>
+        <div class="home-proscons">
+          <div class="home-pros">
+            <h3 style="color:#15803d;margin:0 0 10px">喜欢的地方</h3>
+            {product.pros.map((p: string) => <p class="home-pro-item">✓ {p}</p>)}
+          </div>
+          <div class="home-cons">
+            <h3 style="color:#991b1b;margin:0 0 10px">不足之处</h3>
+            {product.cons.map((c: string) => <p class="home-con-item">✗ {c}</p>)}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {page.content_sections?.map((sec: any) => (
+      <section class="section" id={sec.id}>
+        <h2 class="section-title">{sec.title}</h2>
+        <div class="prose"><p>{sec.body}</p></div>
+      </section>
+    ))}
+
+    {reviews && (
+      <section class="section">
+        <h2 class="section-title">买家真实评价</h2>
+        <UserReviews reviews={reviews} />
+      </section>
+    )}
+
+    {page.faqs?.length && (
+      <section class="section">
+        <h2 class="section-title">常见问题</h2>
+        <FAQAccordion faqs={page.faqs} />
+      </section>
+    )}
+
+    <section class="home-end-cta section">
+      <div class="home-end-inner">
+        <h2>准备好了吗？</h2>
+        <p>{deal?.description ?? `${product?.name} 现在购买享受优惠`}</p>
+        <CTAButton href={aff?.link ?? '#'} text={hero.cta_primary_text ?? '立即购买'} affiliateId={aff?.id} position="end" style="primary" />
+        {product?.pricing?.money_back_days && <p class="home-guarantee">✓ {product.pricing.money_back_days}天退款保证</p>}
+      </div>
+    </section>
+
+    {page.related_pages?.length && (
+      <section class="section">
+        <h2 class="section-title">你可能还喜欢</h2>
+        <RelatedPages relatedSlugs={page.related_pages} allPages={allPages} />
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.hero-home { background:#faf7f2; padding:48px 0 40px; border-bottom:1px solid #e8e0d5; }
+.home-badge{ display:inline-block; padding:4px 14px; background:#d97706; color:#fff; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:12px; }
+.home-h1   { font-size:clamp(1.5rem,3vw,2.2rem); font-weight:800; color:#1c1917; margin:0 0 12px; line-height:1.3; }
+.home-sub  { color:#78716c; margin:0 0 16px; font-size:1rem; }
+.home-meta { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.home-verdict{ padding:4px 12px; background:#fef9c3; color:#92400e; border-radius:6px; font-size:13px; font-weight:600; }
+.home-ctas { margin-bottom:16px; }
+.home-summary { background:#fffbf5; border:1px solid #e8e0d5; border-radius:16px; padding:28px; }
+.home-summary-list { margin:0 0 14px; padding-left:22px; }
+.home-summary-list li { margin-bottom:10px; color:#44403c; line-height:1.6; }
+.home-bottom-line { color:#78716c; font-style:italic; font-size:14px; margin:0; border-top:1px solid #e8e0d5; padding-top:12px; }
+.home-proscons { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:560px){ .home-proscons { grid-template-columns:1fr; } }
+.home-pros, .home-cons { padding:20px; border-radius:12px; }
+.home-pros { background:#f0fdf4; }
+.home-cons { background:#fff1f2; }
+.home-pro-item { color:#166534; font-size:14px; margin:0 0 8px; }
+.home-con-item { color:#9f1239; font-size:14px; margin:0 0 8px; }
+.home-end-cta { background:#faf7f2; border-radius:16px; }
+.home-end-inner { text-align:center; padding:40px 20px; }
+.home-end-inner h2 { font-size:1.5rem; font-weight:700; margin:0 0 8px; color:#1c1917; }
+.home-end-inner p  { color:#78716c; margin:0 0 20px; }
+.home-guarantee { font-size:13px; color:#16a34a; margin-top:10px; }
+</style>

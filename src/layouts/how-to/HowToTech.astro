@@ -1,0 +1,134 @@
+---
+/**
+ * HowToTech.astro — 问题解决页 T1：科技/工具风
+ * 步骤分解型 + 截图区 + 故障排除
+ */
+import BaseLayout from '../BaseLayout.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages = [] } = Astro.props;
+const aff  = product?.affiliate;
+const hero = page.hero ?? {};
+const crumbs = [{ name:'首页',url:'/' },{ name:'教程',url:'/how-to' },{ name:product?.name??page.slug,url:'#' }];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+
+  <section class="howto-hero">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      {hero.badge_text && <span class="howto-badge">{hero.badge_text}</span>}
+      <!-- 第一层 H1：如何…N步，行动号召在最前 -->
+      <h1 class="howto-h1">{page.seo.on_page.h1}</h1>
+      <p class="howto-sub">{hero.subheadline}</p>
+      {aff && (
+        <CTAButton href={aff.link} text={hero.cta_primary_text ?? '先领取优惠再操作'} affiliateId={aff.id} position="hero" style="secondary" />
+      )}
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ══ 步骤（核心内容）══ -->
+    {page.steps?.length && (
+      <section class="section">
+        <div class="steps-list">
+          {page.steps.map((step: any) => (
+            <div class="step-block" id={`step-${step.position}`}>
+              <div class="step-header">
+                <div class="step-circle">{step.position}</div>
+                <!-- 第二层 H2：每步一个H2 -->
+                <h2 class="step-title">{step.name}</h2>
+              </div>
+              <div class="step-content">
+                <p class="step-text">{step.text}</p>
+                {step.image && (
+                  <div class="step-img-placeholder">
+                    <img src={step.image} alt={step.image_alt ?? step.name} loading="lazy" />
+                  </div>
+                )}
+                {step.tip && (
+                  <div class="step-tip">
+                    <span class="tip-icon">💡</span>
+                    <span>{step.tip}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 故障排除 ══ -->
+    {page.troubleshooting?.length && (
+      <section class="section">
+        <h2 class="section-title">常见问题排除</h2>
+        <div class="troubleshoot-list">
+          {page.troubleshooting.map((t: any) => (
+            <div class="troubleshoot-item">
+              <!-- 第三层 H3：问题描述，长尾词自然融入 -->
+              <h3 class="trouble-q">{t.problem}</h3>
+              <p class="trouble-a">{t.solution}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 行动号召 ══ -->
+    {aff && (
+      <section class="howto-cta section">
+        <div class="howto-cta-inner">
+          <h2>准备好了？开始使用 {product?.name}</h2>
+          <CTAButton href={aff.link} text={hero.cta_primary_text ?? '立即开始'} affiliateId={aff.id} position="end" style="primary" />
+          {product?.pricing?.money_back_days && <p class="howto-guarantee">✓ {product.pricing.money_back_days}天退款保证，无购买风险</p>}
+        </div>
+      </section>
+    )}
+
+    {page.faqs?.length && (
+      <section class="section">
+        <h2 class="section-title">常见问题解答</h2>
+        <FAQAccordion faqs={page.faqs} />
+      </section>
+    )}
+
+    {page.related_pages?.length && (
+      <section class="section">
+        <h2 class="section-title">相关教程</h2>
+        <RelatedPages relatedSlugs={page.related_pages} allPages={allPages} />
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.howto-hero { background:var(--surface); border-bottom:1px solid var(--border); padding:40px 0 32px; }
+.howto-badge{ display:inline-block; padding:4px 12px; background:#2563eb; color:#fff; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:12px; }
+.howto-h1  { font-size:clamp(1.4rem,3vw,2rem); font-weight:800; margin:0 0 10px; color:var(--text); line-height:1.3; }
+.howto-sub { color:var(--text-secondary); margin:0 0 18px; }
+.steps-list { display:flex; flex-direction:column; gap:0; }
+.step-block { border-left:3px solid var(--accent); margin-left:14px; padding:0 0 32px 24px; position:relative; }
+.step-block:last-child { border-left-color:transparent; }
+.step-header{ display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+.step-circle{ width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; margin-left:-40px; }
+.step-title { font-size:1.15rem; font-weight:700; margin:0; color:var(--text); }
+.step-content { margin-left:6px; }
+.step-text  { color:var(--text-secondary); line-height:1.7; margin:0 0 12px; }
+.step-img-placeholder { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:12px; min-height:120px; display:flex; align-items:center; justify-content:center; }
+.step-img-placeholder img { max-width:100%; }
+.step-tip   { display:flex; gap:8px; background:#fef9c3; border:1px solid #fde047; border-radius:8px; padding:10px 14px; font-size:13px; color:#92400e; }
+.tip-icon   { flex-shrink:0; }
+.troubleshoot-list { display:flex; flex-direction:column; gap:16px; }
+.troubleshoot-item { padding:16px; background:var(--surface); border-radius:10px; border-left:4px solid #ef4444; }
+.trouble-q  { font-size:15px; font-weight:600; margin:0 0 8px; color:var(--text); }
+.trouble-a  { font-size:14px; color:var(--text-secondary); margin:0; line-height:1.6; }
+.howto-cta  { background:var(--surface2); border-radius:14px; }
+.howto-cta-inner { text-align:center; padding:36px 20px; }
+.howto-cta-inner h2 { font-size:1.3rem; font-weight:700; margin:0 0 16px; }
+.howto-guarantee { font-size:13px; color:var(--accent); margin-top:10px; }
+</style>

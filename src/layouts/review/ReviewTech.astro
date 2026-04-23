@@ -1,0 +1,347 @@
+---
+/**
+ * ReviewTech.astro — 评测页 T1：科技/工具风
+ * 深色Hero + 数据仪表盘 + 参数卡片
+ * 适用：VPN、SaaS、安全软件、建站工具、生产力App
+ */
+import BaseLayout from '../BaseLayout.astro';
+import StarRating from '../../components/StarRating.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import TrustBadges from '../../components/TrustBadges.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import UserReviews from '../../components/UserReviews.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CountdownTimer from '../../components/CountdownTimer.astro';
+
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages = [] } = Astro.props;
+const aff = product?.affiliate;
+const deal = product?.deal;
+const hero = page.hero ?? {};
+const crumbs = [
+  { name: '首页', url: '/' },
+  { name: '评测', url: '/review' },
+  { name: product?.name ?? page.slug, url: '#' },
+];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+
+  <!-- ══ HERO：深色背景，数据仪表盘风 ══ -->
+  <section class="hero-tech">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      <div class="hero-inner">
+        <div class="hero-left">
+          {hero.badge_text && <span class="hero-badge">{hero.badge_text}</span>}
+          <!-- 第一层 H1：主关键词在前15字，每页唯一 -->
+          <h1 class="hero-h1">{page.seo.on_page.h1}</h1>
+          <p class="hero-sub">{hero.subheadline}</p>
+          <div class="hero-score-row">
+            <span class="score-big">{hero.score}</span>
+            <div class="score-right">
+              <StarRating score={hero.score} size="lg" showNumber={false} />
+              <span class="score-label">{hero.score_label ?? '综合评分'}</span>
+            </div>
+            {hero.verdict && (
+              <span class="verdict-tag">{hero.verdict}</span>
+            )}
+          </div>
+          <div class="hero-ctas">
+            <CTAButton
+              href={aff?.link ?? '#'}
+              text={hero.cta_primary_text ?? '立即查看优惠'}
+              subText={hero.cta_primary_urgency}
+              affiliateId={aff?.id}
+              position="hero"
+              price={deal?.deal_price ?? product?.pricing?.starting_from}
+              showPrice={true}
+              style="primary"
+            />
+            <CTAButton
+              href={aff?.link ?? '#'}
+              text={hero.cta_secondary_text ?? '查看最新价格'}
+              affiliateId={aff?.id}
+              position="hero-secondary"
+              style="secondary"
+            />
+          </div>
+          {hero.show_countdown && deal?.expires && (
+            <div style="margin-top:16px">
+              <CountdownTimer expires={deal.expires} />
+            </div>
+          )}
+          <TrustBadges
+            moneyBackDays={product?.pricing?.money_back_days}
+            showAudit={product?.features?.no_logs_audited}
+            auditor={product?.features?.auditor}
+            mediaMentions={page.trust_signals?.media_mentions}
+          />
+        </div>
+        <div class="hero-right">
+          {product?.logo && (
+            <div class="product-logo-wrap">
+              <img src={product.logo} alt={`${product.name} Logo`} width="120" height="60" />
+            </div>
+          )}
+          <!-- 数据卡片 -->
+          <div class="metric-grid">
+            {product?.performance?.avg_speed_mbps && (
+              <div class="metric-card">
+                <span class="metric-val">{product.performance.avg_speed_mbps}<small>Mbps</small></span>
+                <span class="metric-label">平均速度</span>
+              </div>
+            )}
+            {product?.performance?.server_count && (
+              <div class="metric-card">
+                <span class="metric-val">{product.performance.server_count.toLocaleString()}<small>+</small></span>
+                <span class="metric-label">服务器数量</span>
+              </div>
+            )}
+            {product?.features?.simultaneous_devices && (
+              <div class="metric-card">
+                <span class="metric-val">{product.features.simultaneous_devices}</span>
+                <span class="metric-label">同时连接设备</span>
+              </div>
+            )}
+            {product?.pricing?.money_back_days && (
+              <div class="metric-card">
+                <span class="metric-val">{product.pricing.money_back_days}<small>天</small></span>
+                <span class="metric-label">退款保证</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ══ 一分钟总结盒 ══ -->
+    {page.summary_box && (
+      <section class="summary-box section">
+        <h2 class="summary-title">{page.summary_box.title}</h2>
+        <ul class="summary-list">
+          {page.summary_box.points.map((pt: string) => (
+            <li>{pt}</li>
+          ))}
+        </ul>
+        {page.summary_box.bottom_line && (
+          <p class="summary-bottom">{page.summary_box.bottom_line}</p>
+        )}
+        <div style="margin-top:20px">
+          <CTAButton
+            href={aff?.link ?? '#'}
+            text={page.cta_blocks?.[1]?.text ?? '查看优惠'}
+            affiliateId={aff?.id}
+            position="after-summary"
+            style="secondary"
+          />
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 优缺点 ══ -->
+    {(product?.pros?.length || product?.cons?.length) && (
+      <section class="proscons section">
+        <!-- 第二层 H2：次级关键词，覆盖子主题 -->
+        <h2 class="section-title">优缺点总结</h2>
+        <div class="proscons-grid">
+          <div class="pros-col">
+            <h3 class="pc-head pc-pro">优点</h3>
+            <ul class="pc-list">
+              {product.pros.map((p: string) => <li class="pro-item">{p}</li>)}
+            </ul>
+          </div>
+          <div class="cons-col">
+            <h3 class="pc-head pc-con">缺点</h3>
+            <ul class="pc-list">
+              {product.cons.map((c: string) => <li class="con-item">{c}</li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 正文内容区（各 section 对应一个 H2）══ -->
+    {page.content_sections?.map((sec: any) => (
+      <section class="content-section section" id={sec.id}>
+        <h2 class="section-title">{sec.title}</h2>
+        <div class="prose"><p>{sec.body}</p></div>
+      </section>
+    ))}
+
+    <!-- ══ 价格套餐 ══ -->
+    {product?.pricing?.plans && (
+      <section class="pricing section">
+        <h2 class="section-title">价格与套餐</h2>
+        <div class="plans-grid">
+          {product.pricing.plans.map((plan: any) => (
+            <div class={`plan-card ${plan.is_popular ? 'plan-popular' : ''}`}>
+              {plan.is_popular && <div class="popular-badge">最受欢迎</div>}
+              <div class="plan-name">{plan.name}</div>
+              <div class="plan-price">${plan.monthly_price}<small>/月</small></div>
+              {plan.annual_price && <div class="plan-annual">按年计费 ${plan.annual_price}/年</div>}
+              <ul class="plan-features">
+                {plan.highlights?.map((h: string) => <li>{h}</li>)}
+              </ul>
+              <CTAButton
+                href={aff?.link ?? '#'}
+                text="选择此方案"
+                affiliateId={aff?.id}
+                position={`plan-${plan.name}`}
+                style={plan.is_popular ? 'primary' : 'secondary'}
+                fullWidth={true}
+              />
+            </div>
+          ))}
+        </div>
+        <p class="pricing-note">* 所有套餐均享有 {product.pricing.money_back_days} 天无理由退款保证</p>
+      </section>
+    )}
+
+    <!-- ══ 功能特性 ══ -->
+    {product?.features && (
+      <section class="features section">
+        <h2 class="section-title">核心功能特性</h2>
+        <div class="features-grid">
+          {product.features.protocols && (
+            <div class="feature-item">
+              <span class="feature-check">✓</span>
+              <span>支持协议：{(product.features.protocols as string[]).join('、')}</span>
+            </div>
+          )}
+          {product.features.has_kill_switch && (
+            <div class="feature-item"><span class="feature-check">✓</span><span>Kill Switch 断线保护</span></div>
+          )}
+          {product.features.has_split_tunneling && (
+            <div class="feature-item"><span class="feature-check">✓</span><span>分流模式（Split Tunneling）</span></div>
+          )}
+          {product.features.has_double_vpn && (
+            <div class="feature-item"><span class="feature-check">✓</span><span>双重VPN加密</span></div>
+          )}
+          {product.features.has_ad_blocker && (
+            <div class="feature-item"><span class="feature-check">✓</span><span>内置广告拦截</span></div>
+          )}
+          {product.features.no_logs_policy && (
+            <div class="feature-item"><span class="feature-check">✓</span>
+              <span>无日志政策{product.features.no_logs_audited ? `（${product.features.auditor}审计）` : ''}</span>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 用户评价 ══ -->
+    {reviews && (
+      <section class="reviews-section section">
+        <h2 class="section-title">用户真实评价</h2>
+        <UserReviews reviews={reviews} />
+      </section>
+    )}
+
+    <!-- ══ FAQ：H2 + H3 问句，触发 Google FAQ 富媒体摘要 ══ -->
+    {page.faqs?.length && (
+      <section class="faq-section section">
+        <h2 class="section-title">常见问题解答</h2>
+        <FAQAccordion faqs={page.faqs} />
+      </section>
+    )}
+
+    <!-- ══ 底部 CTA ══ -->
+    <section class="end-cta section">
+      <div class="end-cta-inner">
+        <h2>{deal ? `立即领取 ${deal.discount_pct}% 独家折扣` : `立即开始使用 ${product?.name}`}</h2>
+        {deal?.label && <p class="end-cta-sub">{deal.label} · {deal.description}</p>}
+        <CTAButton
+          href={aff?.link ?? '#'}
+          text={page.cta_blocks?.find((c: any) => c.position === 'end_of_page')?.text ?? '获取最低价格'}
+          subText={page.cta_blocks?.find((c: any) => c.position === 'end_of_page')?.sub_text}
+          affiliateId={aff?.id}
+          position="end"
+          price={deal?.deal_price ?? product?.pricing?.starting_from}
+          showPrice={true}
+          style="primary"
+        />
+        {product?.pricing?.money_back_days && (
+          <p class="end-guarantee">✓ {product.pricing.money_back_days}天无理由退款 · 无购买风险</p>
+        )}
+      </div>
+    </section>
+
+    <!-- ══ 相关推荐 ══ -->
+    {page.related_pages?.length && (
+      <section class="related section">
+        <h2 class="section-title">相关推荐</h2>
+        <RelatedPages relatedSlugs={page.related_pages} allPages={allPages} />
+      </section>
+    )}
+
+  </div>
+</BaseLayout>
+
+<style>
+/* Hero */
+.hero-tech { background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%); color:#fff; padding:48px 0 40px; }
+.hero-badge{ display:inline-block; padding:4px 12px; background:#16a34a; color:#fff; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:12px; }
+.hero-h1   { font-size:clamp(1.5rem,3vw,2.25rem); font-weight:800; line-height:1.25; margin:0 0 12px; color:#f8fafc; }
+.hero-sub  { font-size:1rem; color:#94a3b8; margin:0 0 20px; }
+.hero-score-row { display:flex; align-items:center; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+.score-big { font-size:3.5rem; font-weight:800; color:#fbbf24; line-height:1; }
+.score-right { display:flex; flex-direction:column; gap:4px; }
+.score-label { font-size:12px; color:#94a3b8; }
+.verdict-tag { padding:6px 14px; background:#16a34a; color:#fff; border-radius:6px; font-weight:700; font-size:14px; }
+.hero-ctas { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+.hero-inner { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+@media (max-width:640px) { .hero-inner { grid-template-columns:1fr; } }
+.product-logo-wrap { background:#1e293b; border:1px solid #334155; border-radius:10px; padding:20px; margin-bottom:16px; display:flex; justify-content:center; }
+.metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.metric-card { background:#1e293b; border:1px solid #334155; border-radius:8px; padding:16px; text-align:center; }
+.metric-val  { display:block; font-size:1.75rem; font-weight:800; color:#38bdf8; }
+.metric-val small { font-size:0.75rem; color:#94a3b8; }
+.metric-label{ display:block; font-size:12px; color:#94a3b8; margin-top:4px; }
+
+/* Summary box */
+.summary-box { background:var(--surface2); border:1px solid #bbf7d0; border-radius:12px; padding:28px; }
+.summary-title{ font-size:1.1rem; font-weight:700; margin:0 0 14px; color:var(--accent-dark); }
+.summary-list { margin:0 0 16px; padding-left:20px; }
+.summary-list li { margin-bottom:8px; color:var(--text); }
+.summary-bottom{ margin:0; font-style:italic; color:var(--text-secondary); font-size:14px; border-top:1px solid #bbf7d0; padding-top:12px; }
+
+/* Pros/Cons */
+.proscons-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:560px){ .proscons-grid { grid-template-columns:1fr; } }
+.pc-head { font-size:15px; font-weight:700; margin:0 0 12px; padding:8px 12px; border-radius:6px; }
+.pc-pro  { background:#dcfce7; color:#15803d; }
+.pc-con  { background:#fee2e2; color:#991b1b; }
+.pc-list { margin:0; padding-left:20px; }
+.pc-list li { margin-bottom:8px; font-size:14px; color:var(--text-secondary); }
+.pro-item::marker { color:#16a34a; }
+.con-item::marker { color:#ef4444; }
+
+/* Pricing */
+.plans-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+.plan-card  { border:1px solid var(--border); border-radius:12px; padding:24px; position:relative; }
+.plan-popular { border:2px solid var(--accent); }
+.popular-badge{ position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--accent); color:#fff; padding:3px 14px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap; }
+.plan-name  { font-weight:700; font-size:15px; margin-bottom:8px; }
+.plan-price { font-size:2rem; font-weight:800; color:var(--accent); }
+.plan-price small { font-size:14px; font-weight:400; color:var(--text-secondary); }
+.plan-annual{ font-size:12px; color:var(--text-secondary); margin-bottom:14px; }
+.plan-features { margin:0 0 16px; padding-left:18px; font-size:13px; }
+.plan-features li { margin-bottom:6px; color:var(--text-secondary); }
+.pricing-note { font-size:13px; color:var(--text-secondary); margin-top:12px; }
+
+/* Features */
+.features-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+.feature-item  { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border-radius:8px; font-size:14px; }
+.feature-check { color:var(--accent); font-weight:700; flex-shrink:0; }
+
+/* End CTA */
+.end-cta { background:var(--surface); border-radius:16px; }
+.end-cta-inner { text-align:center; padding:40px 20px; }
+.end-cta-inner h2 { font-size:1.5rem; font-weight:700; margin:0 0 8px; }
+.end-cta-sub  { color:var(--text-secondary); margin:0 0 20px; }
+.end-guarantee{ font-size:13px; color:var(--accent); margin-top:12px; font-weight:500; }
+</style>

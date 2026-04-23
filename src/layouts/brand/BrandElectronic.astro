@@ -1,0 +1,6 @@
+---
+import BrandTech from './BrandTech.astro';
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages } = Astro.props;
+---
+<BrandTech page={page} product={product} reviews={reviews} allPages={allPages} />

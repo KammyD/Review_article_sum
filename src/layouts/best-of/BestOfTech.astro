@@ -1,0 +1,146 @@
+---
+/**
+ * BestOfTech.astro — 榜单页 T1：科技/工具风
+ * 排名卡片列 + 评分+参数表 + 方法论说明
+ * 适用：VPN、SaaS、安全工具等品类榜单
+ */
+import BaseLayout from '../BaseLayout.astro';
+import StarRating from '../../components/StarRating.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+interface Props { page: any; product?: any; reviews?: any; allPages?: any[]; allProducts?: any[]; }
+const { page, product, reviews, allPages = [], allProducts = [] } = Astro.props;
+const hero = page.hero ?? {};
+const crumbs = [{ name:'首页',url:'/' },{ name:'榜单',url:'/best' },{ name:page.seo.on_page.h1,url:'#' }];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+
+  <!-- ══ HERO ══ -->
+  <section class="bestof-hero">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      {hero.badge_text && <span class="bestof-badge">{hero.badge_text}</span>}
+      <!-- 第一层 H1：年份在最前，数量具体，"排行榜"触发 Google ItemList 识别 -->
+      <h1 class="bestof-h1">{page.seo.on_page.h1}</h1>
+      <p class="bestof-sub">{hero.subheadline}</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ══ 排名列表（主体）══ -->
+    <section class="section">
+      <!-- 第二层 H2：第1名、第2名… 每个是子主题 -->
+      {page.ranked_items?.map((item: any, idx: number) => {
+        const prod = allProducts.find((p: any) => p.data.id === item.product_ref)?.data;
+        const aff  = prod?.affiliate;
+        return (
+          <div class="rank-card" id={`rank-${item.rank ?? idx+1}`}>
+            <div class="rank-num">#{item.rank ?? idx+1}</div>
+            <div class="rank-body">
+              <h2 class="rank-title">
+                第{item.rank ?? idx+1}名：{prod?.name ?? item.product_ref}
+                {item.verdict && <span class="rank-verdict">{item.verdict}</span>}
+              </h2>
+              {prod && <p class="rank-tagline">{prod.tagline ?? prod.description}</p>}
+              <div class="rank-meta">
+                {prod?.ratings?.overall && <StarRating score={prod.ratings.overall} size="sm" />}
+                {item.score && <span class="rank-score-text">综合评分 {item.score}</span>}
+                {item.highlight && <span class="rank-highlight">{item.highlight}</span>}
+              </div>
+              {prod && (
+                <div class="rank-specs">
+                  {prod.pricing?.starting_from && <span class="rank-spec">💰 ${prod.pricing.starting_from}/月起</span>}
+                  {prod.pricing?.money_back_days && <span class="rank-spec">🛡 {prod.pricing.money_back_days}天退款</span>}
+                  {prod.performance?.server_count && <span class="rank-spec">🌐 {prod.performance.server_count.toLocaleString()}+台服务器</span>}
+                  {prod.features?.simultaneous_devices && <span class="rank-spec">📱 {prod.features.simultaneous_devices}台设备</span>}
+                </div>
+              )}
+              <div class="rank-ctas">
+                {aff && (
+                  <CTAButton
+                    href={aff.link}
+                    text={item.cta_text ?? '查看优惠'}
+                    affiliateId={aff.id}
+                    position={`rank-${item.rank ?? idx+1}`}
+                    style="primary"
+                  />
+                )}
+                {prod && (
+                  <a href={`/review/${prod.slug}-review`} class="rank-review-link">查看完整评测 →</a>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </section>
+
+    <!-- ══ 测试方法论 ══ -->
+    {page.methodology && (
+      <section class="section">
+        <h2 class="section-title">{page.methodology.title}</h2>
+        <p class="prose">{page.methodology.body}</p>
+        {page.methodology.criteria && (
+          <div class="criteria-grid">
+            {page.methodology.criteria.map((c: any) => (
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">{c.name}</span>
+                  <span class="criterion-weight">{c.weight}</span>
+                </div>
+                <p class="criterion-desc">{c.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    )}
+
+    {page.faqs?.length && (
+      <section class="section">
+        <h2 class="section-title">常见问题</h2>
+        <FAQAccordion faqs={page.faqs} />
+      </section>
+    )}
+
+    {page.related_pages?.length && (
+      <section class="section">
+        <h2 class="section-title">相关推荐</h2>
+        <RelatedPages relatedSlugs={page.related_pages} allPages={allPages} />
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.bestof-hero { background:linear-gradient(135deg,#1e3a5f,#0f172a); color:#fff; padding:48px 0 36px; }
+.bestof-badge{ display:inline-block; padding:4px 12px; background:#f59e0b; color:#000; border-radius:20px; font-size:12px; font-weight:700; margin-bottom:12px; }
+.bestof-h1  { font-size:clamp(1.4rem,3vw,2rem); font-weight:800; color:#f8fafc; margin:0 0 10px; }
+.bestof-sub { color:#94a3b8; margin:0; }
+.rank-card  { display:flex; gap:20px; padding:28px; border:1px solid var(--border); border-radius:14px; margin-bottom:20px; align-items:flex-start; }
+.rank-card:first-child { border:2px solid var(--accent); background:#f0fdf4; }
+.rank-num   { font-size:2.5rem; font-weight:900; color:var(--accent); min-width:50px; text-align:center; flex-shrink:0; line-height:1; padding-top:4px; }
+.rank-body  { flex:1; min-width:0; }
+.rank-title { font-size:1.2rem; font-weight:700; margin:0 0 8px; display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.rank-verdict { font-size:12px; padding:3px 10px; background:#dcfce7; color:#15803d; border-radius:20px; font-weight:500; }
+.rank-tagline { font-size:14px; color:var(--text-secondary); margin:0 0 10px; }
+.rank-meta  { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+.rank-score-text { font-size:13px; color:var(--text-secondary); }
+.rank-highlight  { padding:3px 10px; background:#fef9c3; color:#92400e; border-radius:20px; font-size:12px; font-weight:500; }
+.rank-specs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.rank-spec  { font-size:13px; color:var(--text-secondary); padding:4px 10px; background:var(--surface); border-radius:6px; }
+.rank-ctas  { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.rank-review-link { font-size:13px; color:var(--accent); text-decoration:none; font-weight:500; }
+.rank-review-link:hover { text-decoration:underline; }
+.criteria-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-top:16px; }
+.criterion  { padding:16px; background:var(--surface); border-radius:8px; }
+.criterion-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.criterion-name  { font-weight:600; font-size:14px; }
+.criterion-weight{ font-size:13px; color:var(--accent); font-weight:700; }
+.criterion-desc  { font-size:13px; color:var(--text-secondary); margin:0; }
+@media(max-width:560px){ .rank-card { flex-direction:column; } .rank-num { font-size:1.5rem; } }
+</style>

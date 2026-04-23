@@ -1,0 +1,72 @@
+{
+  "product_ref": "nordvpn",
+  "aggregate": {
+    "score": 4.8,
+    "total": 18742,
+    "distribution": {
+      "5_star": 14200,
+      "4_star": 3100,
+      "3_star": 900,
+      "2_star": 320,
+      "1_star": 222
+    }
+  },
+  "items": [
+    {
+      "id": "r001",
+      "author": "张伟",
+      "avatar_initials": "张",
+      "country": "中国",
+      "rating": 5,
+      "date": "2025-05-20",
+      "title": "用了2年，速度没让我失望过",
+      "body": "主要用来看Netflix和工作远程连公司，速度一直很稳定，4K完全没问题。续费了好几次，没想过换。",
+      "use_case": "流媒体 + 远程办公",
+      "verified": true,
+      "helpful_count": 42,
+      "source": "用户提交"
+    },
+    {
+      "id": "r002",
+      "author": "李晓敏",
+      "avatar_initials": "李",
+      "country": "中国",
+      "rating": 5,
+      "date": "2025-04-15",
+      "title": "客服态度很好，退款也很顺利",
+      "body": "试用期内因为换电脑，联系客服说要退款，对方二话没说就退了，全程10分钟搞定。后来想清楚了又重新买了。",
+      "use_case": "日常使用",
+      "verified": true,
+      "helpful_count": 28,
+      "source": "用户提交"
+    },
+    {
+      "id": "r003",
+      "author": "王磊",
+      "avatar_initials": "王",
+      "country": "中国",
+      "rating": 4,
+      "date": "2025-03-08",
+      "title": "整体很好，就是月付太贵",
+      "body": "功能没得说，安全放心。就是如果不买长期套餐，月付价格有点高。建议直接买2年的，划算很多。",
+      "use_case": "隐私保护",
+      "verified": true,
+      "helpful_count": 19,
+      "source": "用户提交"
+    },
+    {
+      "id": "r004",
+      "author": "陈小红",
+      "avatar_initials": "陈",
+      "country": "中国",
+      "rating": 5,
+      "date": "2025-02-20",
+      "title": "Netflix解锁没问题，速度很快",
+      "body": "主要买来看Netflix的，美区、日区都能解锁，4K播放很流畅。手机和电脑都在用，6台设备够用了。",
+      "use_case": "流媒体解锁",
+      "verified": true,
+      "helpful_count": 35,
+      "source": "用户提交"
+    }
+  ]
+}

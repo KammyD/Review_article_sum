@@ -1,0 +1,72 @@
+---
+import StarRating from './StarRating.astro';
+interface Props { reviews: any; max?: number; }
+const { reviews, max = 4 } = Astro.props;
+const items = (reviews?.items ?? []).slice(0, max);
+const agg   = reviews?.aggregate;
+const dist  = agg?.distribution ?? {};
+const total = agg?.total ?? 1;
+---
+{agg && (
+  <div class="reviews-agg">
+    <div class="agg-score">
+      <span class="agg-num">{agg.score.toFixed(1)}</span>
+      <StarRating score={agg.score} size="lg" showNumber={false} />
+      <span class="agg-count">{agg.total.toLocaleString()} 条评价</span>
+    </div>
+    <div class="agg-bars">
+      {[5,4,3,2,1].map(n => {
+        const count = dist[`${n}_star`] ?? 0;
+        const pct   = Math.round((count / total) * 100);
+        return (
+          <div class="bar-row">
+            <span class="bar-label">{n}星</span>
+            <div class="bar-track"><div class="bar-fill" style={`width:${pct}%`}></div></div>
+            <span class="bar-pct">{pct}%</span>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
+<div class="reviews-list">
+  {items.map((r: any) => (
+    <div class="review-card">
+      <div class="review-header">
+        <div class="avatar">{r.avatar_initials}</div>
+        <div>
+          <div class="reviewer-name">{r.author} {r.verified && <span class="verified-badge">✓ 已验证</span>}</div>
+          <div class="reviewer-meta">{r.use_case && <span>{r.use_case} · </span>}{r.date}</div>
+        </div>
+        <div style="margin-left:auto"><StarRating score={r.rating} size="sm" /></div>
+      </div>
+      <p class="review-title">{r.title}</p>
+      <p class="review-body">{r.body}</p>
+      {r.helpful_count && <p class="review-helpful">{r.helpful_count} 人觉得有帮助</p>}
+    </div>
+  ))}
+</div>
+
+<style>
+.reviews-agg   { display:flex; gap:32px; padding:24px; background:var(--surface,#f9fafb); border-radius:12px; margin-bottom:24px; flex-wrap:wrap; }
+.agg-score     { display:flex; flex-direction:column; align-items:center; gap:6px; min-width:100px; }
+.agg-num       { font-size:3rem; font-weight:700; line-height:1; color:var(--text,#111827); }
+.agg-count     { font-size:13px; color:var(--text-secondary,#6b7280); }
+.agg-bars      { flex:1; min-width:200px; display:flex; flex-direction:column; gap:6px; justify-content:center; }
+.bar-row       { display:flex; align-items:center; gap:8px; font-size:13px; }
+.bar-label     { width:28px; color:var(--text-secondary,#6b7280); text-align:right; }
+.bar-track     { flex:1; height:8px; background:#e5e7eb; border-radius:4px; overflow:hidden; }
+.bar-fill      { height:100%; background:#f59e0b; border-radius:4px; transition:width 0.3s; }
+.bar-pct       { width:32px; color:var(--text-secondary,#6b7280); }
+.reviews-list  { display:flex; flex-direction:column; gap:16px; }
+.review-card   { padding:20px; border:1px solid var(--border,#e5e7eb); border-radius:10px; background:#fff; }
+.review-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+.avatar        { width:40px; height:40px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; flex-shrink:0; }
+.reviewer-name { font-weight:600; font-size:14px; color:var(--text,#111827); }
+.verified-badge{ font-size:11px; color:#16a34a; font-weight:500; margin-left:6px; }
+.reviewer-meta { font-size:12px; color:var(--text-secondary,#6b7280); margin-top:2px; }
+.review-title  { font-weight:600; font-size:14px; margin:0 0 6px; color:var(--text,#111827); }
+.review-body   { font-size:14px; color:var(--text-secondary,#374151); line-height:1.6; margin:0 0 8px; }
+.review-helpful{ font-size:12px; color:#9ca3af; margin:0; }
+</style>

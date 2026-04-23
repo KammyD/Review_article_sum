@@ -1,0 +1,146 @@
+---
+/**
+ * DealTech.astro — 优惠/促销页 T1：科技/工具风
+ * 醒目倒计时 + 优惠码高亮 + 极简弹窗感
+ */
+import BaseLayout from '../BaseLayout.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import CountdownTimer from '../../components/CountdownTimer.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import RelatedPages from '../../components/RelatedPages.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages = [] } = Astro.props;
+const aff  = product?.affiliate;
+const deal = product?.deal;
+const hero = page.hero ?? {};
+const crumbs = [{ name:'首页',url:'/' },{ name:'优惠',url:'/deals' },{ name:product?.name??page.slug,url:'#' }];
+---
+<BaseLayout page={page} product={product} reviews={reviews} breadcrumbs={crumbs}>
+  <section class="deal-hero">
+    <div class="container">
+      <Breadcrumb crumbs={crumbs} />
+      {hero.badge_text && <span class="deal-exclusive">{hero.badge_text}</span>}
+      <!-- 第一层 H1：年份+月份+具体折扣数字，时效性最强 -->
+      <h1 class="deal-h1">{page.seo.on_page.h1}</h1>
+      <p class="deal-sub">{hero.subheadline ?? `已验证 · 折后$${hero.deal_price ?? deal?.deal_price}/月 · ${product?.pricing?.money_back_days ?? 30}天退款保证`}</p>
+
+      {(hero.show_countdown || deal?.expires) && (
+        <div style="margin:16px 0">
+          <CountdownTimer expires={hero.expires ?? deal?.expires} />
+        </div>
+      )}
+
+      <!-- 优惠码展示 -->
+      {(hero.coupon_code ?? deal?.coupon_code) && (
+        <div class="coupon-box">
+          <div class="coupon-label">专属优惠码</div>
+          <div class="coupon-code-row">
+            <span class="coupon-code">{hero.coupon_code ?? deal?.coupon_code}</span>
+            <button class="coupon-copy" onclick={`navigator.clipboard.writeText('${hero.coupon_code ?? deal?.coupon_code}');this.textContent='已复制!'`}>复制</button>
+          </div>
+          {(hero.discount_pct ?? deal?.discount_pct) && (
+            <div class="coupon-discount">立省 {hero.discount_pct ?? deal?.discount_pct}%</div>
+          )}
+        </div>
+      )}
+
+      <div class="deal-price-row">
+        {(hero.original_price ?? deal?.original_price) && (
+          <span class="original-price">${hero.original_price ?? deal?.original_price}/月</span>
+        )}
+        {(hero.deal_price ?? deal?.deal_price) && (
+          <span class="deal-price">${hero.deal_price ?? deal?.deal_price}/月</span>
+        )}
+      </div>
+
+      <CTAButton
+        href={aff?.link??'#'}
+        text={hero.cta_primary_text ?? `立即领取${deal?.discount_pct ?? ''}%折扣`}
+        subText={hero.cta_primary_urgency}
+        affiliateId={aff?.id}
+        position="hero"
+        style="primary"
+      />
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- 如何使用步骤 -->
+    {page.how_to_use?.length && (
+      <section class="section">
+        <!-- 第二层 H2 -->
+        <h2 class="section-title">如何使用优惠码？{page.how_to_use.length}步完成</h2>
+        <ol class="how-to-steps">
+          {page.how_to_use.map((s: any) => (
+            <li class="how-step">
+              <span class="step-num">{s.step}</span>
+              <span>{s.text}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    <!-- 套餐价格对比 -->
+    {product?.pricing?.plans && (
+      <section class="section">
+        <h2 class="section-title">套餐折后价格一览</h2>
+        <div class="deal-plans">
+          {product.pricing.plans.map((plan: any) => (
+            <div class={`deal-plan ${plan.is_popular ? 'deal-plan-hot' : ''}`}>
+              {plan.is_popular && <div class="deal-hot-badge">最受欢迎</div>}
+              <div class="deal-plan-name">{plan.name}</div>
+              <div class="deal-plan-price">${plan.monthly_price}<small>/月</small></div>
+              <div class="deal-plan-devices">{plan.devices}台设备</div>
+              <CTAButton href={aff?.link??'#'} text="选择此方案" affiliateId={aff?.id} position={`plan-${plan.name}`} style={plan.is_popular ? 'primary':'secondary'} fullWidth={true} />
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {page.faqs?.length && (
+      <section class="section">
+        <h2 class="section-title">优惠码常见问题</h2>
+        <FAQAccordion faqs={page.faqs} />
+      </section>
+    )}
+
+    {page.related_pages?.length && (
+      <section class="section">
+        <h2 class="section-title">相关推荐</h2>
+        <RelatedPages relatedSlugs={page.related_pages} allPages={allPages} />
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.deal-hero  { background:linear-gradient(135deg,#0f172a,#1e3a5f); color:#fff; padding:48px 0 40px; }
+.deal-exclusive { display:inline-block; padding:4px 12px; background:#f59e0b; color:#000; border-radius:20px; font-size:12px; font-weight:700; margin-bottom:12px; }
+.deal-h1    { font-size:clamp(1.4rem,3vw,2rem); font-weight:800; color:#f8fafc; margin:0 0 8px; line-height:1.3; }
+.deal-sub   { color:#94a3b8; margin:0 0 16px; font-size:14px; }
+.coupon-box { background:#1e293b; border:2px dashed #f59e0b; border-radius:12px; padding:20px; margin:20px 0; display:inline-block; min-width:280px; }
+.coupon-label { font-size:12px; color:#94a3b8; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em; }
+.coupon-code-row { display:flex; align-items:center; gap:12px; }
+.coupon-code{ font-size:1.75rem; font-weight:800; color:#fbbf24; letter-spacing:0.1em; font-family:monospace; }
+.coupon-copy{ padding:6px 14px; background:#f59e0b; color:#000; border:none; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; }
+.coupon-copy:hover { background:#fbbf24; }
+.coupon-discount { font-size:13px; color:#4ade80; margin-top:8px; font-weight:600; }
+.deal-price-row { display:flex; align-items:baseline; gap:12px; margin:16px 0 20px; }
+.original-price { font-size:1.1rem; color:#64748b; text-decoration:line-through; }
+.deal-price { font-size:2rem; font-weight:800; color:#4ade80; }
+.how-to-steps { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:12px; }
+.how-step   { display:flex; align-items:flex-start; gap:14px; padding:14px; background:var(--surface); border-radius:8px; font-size:14px; }
+.step-num   { width:28px; height:28px; background:var(--accent); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+.deal-plans { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+.deal-plan  { border:1px solid var(--border); border-radius:10px; padding:20px; position:relative; text-align:center; }
+.deal-plan-hot { border:2px solid var(--accent); }
+.deal-hot-badge { position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--accent); color:#fff; padding:2px 12px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; }
+.deal-plan-name  { font-weight:700; margin-bottom:8px; }
+.deal-plan-price { font-size:1.75rem; font-weight:800; color:var(--accent); }
+.deal-plan-price small { font-size:13px; color:var(--text-secondary); }
+.deal-plan-devices { font-size:12px; color:var(--text-secondary); margin:6px 0 14px; }
+</style>

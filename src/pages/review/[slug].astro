@@ -1,0 +1,56 @@
+---
+/**
+ * pages/review/[slug].astro
+ * 评测/对比页动态路由
+ * 根据 page.template_style 分发到 5 个不同 Layout
+ */
+import { getCollection, getEntry } from 'astro:content';
+
+import ReviewTech       from '../../layouts/review/ReviewTech.astro';
+import ReviewHome       from '../../layouts/review/ReviewHome.astro';
+import ReviewFood       from '../../layouts/review/ReviewFood.astro';
+import ReviewPet        from '../../layouts/review/ReviewPet.astro';
+import ReviewElectronic from '../../layouts/review/ReviewElectronic.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => data.page_type === 'review' && data.meta.published);
+  return pages.map(page => ({
+    params: { slug: page.data.slug },
+    props: { pageData: page.data },
+  }));
+}
+
+const { pageData } = Astro.props;
+
+// 加载关联产品数据
+const productEntry = pageData.product_ref
+  ? await getEntry('products', pageData.product_ref)
+  : null;
+
+// 加载评论数据
+const reviewsEntry = pageData.product_ref
+  ? await getEntry('reviews', `${pageData.product_ref}-reviews`).catch(() => null)
+  : null;
+
+// 加载所有页面（用于相关推荐组件）
+const allPages = await getCollection('pages', ({ data }) => data.meta.published);
+
+// 根据 template_style 选择 Layout
+const layoutMap: Record<string, any> = {
+  tech:       ReviewTech,
+  home:       ReviewHome,
+  food:       ReviewFood,
+  pet:        ReviewPet,
+  electronic: ReviewElectronic,
+};
+const Layout = layoutMap[pageData.template_style] ?? ReviewTech;
+
+const product = productEntry?.data ?? null;
+const reviews = reviewsEntry?.data ?? null;
+---
+<Layout
+  page={pageData}
+  product={product}
+  reviews={reviews}
+  allPages={allPages}
+/>

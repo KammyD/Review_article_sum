@@ -1,0 +1,102 @@
+{
+  "slug": "nordvpn-brand",
+  "page_type": "brand",
+  "template_style": "tech",
+  "product_ref": "nordvpn",
+
+  "seo": {
+    "title": "NordVPN 完整指南 2025：功能、价格、评价全解析",
+    "description": "NordVPN的功能、定价、优缺点详细介绍。含18,742条用户评价分析、独家67%优惠码及购买建议。",
+    "keywords": {
+      "primary": "nordvpn",
+      "secondary": ["nordvpn官网", "nordvpn功能", "nordvpn介绍", "nordvpn怎么样"],
+      "lsi": ["nordvpn服务器", "nordvpn协议", "nordvpn安全", "nordvpn价格"],
+      "long_tail": ["nordvpn和其他vpn比怎么样", "nordvpn适合什么人用", "nordvpn有哪些功能"],
+      "negative": []
+    },
+    "on_page": {
+      "h1": "NordVPN 完整指南 2025：功能、价格、评价全解析",
+      "h2_list": [
+        "NordVPN 是什么？",
+        "核心功能详解",
+        "价格与套餐方案",
+        "服务器网络：62个国家5500+台",
+        "安全与隐私保护",
+        "用户口碑：18,742条真实评价",
+        "NordVPN 适合谁？",
+        "常见问题解答"
+      ],
+      "url_slug": "nordvpn-brand",
+      "keyword_in_first_100_words": true,
+      "image_alts": ["NordVPN品牌Logo", "NordVPN服务器地图", "NordVPN功能截图", "NordVPN安全认证"]
+    },
+    "schema": {
+      "type": "Product",
+      "item_reviewed_name": "NordVPN",
+      "item_reviewed_type": "SoftwareApplication",
+      "rating_value": 4.8,
+      "rating_count": 18742,
+      "best_rating": 5,
+      "worst_rating": 1,
+      "review_body_summary": "NordVPN是全球领先的VPN服务商之一，以速度、安全和易用性著称。"
+    },
+    "canonical": "/brand/nordvpn-brand",
+    "og_image": "/images/og/nordvpn-brand.png",
+    "og_title": "NordVPN完整指南：所有你需要知道的",
+    "og_description": "NordVPN功能、价格、用户评价全解析，含独家优惠码。",
+    "index": true,
+    "follow": true,
+    "priority": 0.75,
+    "changefreq": "monthly"
+  },
+
+  "hero": {
+    "headline": "NordVPN 完整指南 2025：功能、价格、评价全解析",
+    "subheadline": "全球5500+台服务器 · 62个国家 · 通过独立安全审计",
+    "score": 4.8,
+    "review_count": 18742,
+    "cta_primary_text": "立即领取67%折扣",
+    "cta_secondary_text": "查看详细评测",
+    "badge_text": "2025年推荐"
+  },
+
+  "about_sections": [
+    {
+      "title": "NordVPN 是什么？",
+      "body": "NordVPN成立于2012年，总部位于巴拿马，是目前全球用户数最多的商业VPN服务之一。其核心优势在于极高的连接速度（基于自研NordLynx协议）和经过独立审计的严格无日志政策。"
+    },
+    {
+      "title": "核心功能详解",
+      "features": [
+        { "name": "NordLynx协议", "desc": "基于WireGuard开发的专有协议，速度比传统OpenVPN快3倍" },
+        { "name": "双重VPN", "desc": "流量经过两台服务器双重加密，极限安全场景使用" },
+        { "name": "Onion over VPN", "desc": "结合Tor网络，实现最高级别匿名" },
+        { "name": "Kill Switch", "desc": "VPN断线时自动切断网络，防止IP泄露" },
+        { "name": "Threat Protection", "desc": "内置广告拦截和恶意软件防护" },
+        { "name": "Meshnet", "desc": "将多台设备组成安全私人网络" }
+      ]
+    }
+  ],
+
+  "faqs": [
+    {
+      "q": "NordVPN 是哪个国家的公司？",
+      "a": "NordVPN由总部位于巴拿马的Nord Security公司运营。巴拿马不在14眼联盟范围内，无强制用户数据存储法律，有利于用户隐私保护。",
+      "keyword": "nordvpn哪个国家"
+    },
+    {
+      "q": "NordVPN 值得买吗？",
+      "a": "对于有流媒体解锁、隐私保护或远程办公需求的用户来说非常值得。2年套餐折后约$3.99/月，且有30天退款保证，实际购买风险极低。",
+      "keyword": "nordvpn值得买吗"
+    }
+  ],
+
+  "related_pages": ["nordvpn-review", "nordvpn-coupon", "best-vpn-2025"],
+
+  "meta": {
+    "publish_date": "2025-01-15",
+    "update_date": "2025-06-01",
+    "author": "admin",
+    "published": true
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "id": "nordvpn",
+  "name": "NordVPN",
+  "slug": "nordvpn",
+  "category": "vpn",
+  "logo": "/images/products/nordvpn-logo.png",
+  "screenshot": "/images/products/nordvpn-screenshot.png",
+  "tagline": "全球最快、最安全的VPN服务",
+  "description": "NordVPN 是一家总部位于巴拿马的VPN服务商，拥有超过5500台服务器，以极高的速度和安全性著称。",
+  "founded_year": 2012,
+  "hq_country": "巴拿马",
+  "website": "https://nordvpn.com",
+  "affiliate": {
+    "link": "https://go.nordvpn.net/your-affiliate-id",
+    "id": "aff_nord_001",
+    "network": "Impact",
+    "commission_type": "percent",
+    "commission_value": 40,
+    "cookie_days": 30,
+    "deep_link_base": "https://go.nordvpn.net/your-id?url="
+  },
+  "pricing": {
+    "currency": "USD",
+    "starting_from": "3.99",
+    "billing_period": "month",
+    "plans": [
+      {
+        "name": "基础版",
+        "monthly_price": "3.99",
+        "annual_price": "47.88",
+        "devices": 1,
+        "highlights": ["VPN保护", "广告拦截"]
+      },
+      {
+        "name": "标准版",
+        "monthly_price": "5.99",
+        "annual_price": "71.88",
+        "devices": 6,
+        "highlights": ["VPN保护", "广告拦截", "恶意软件防护"],
+        "is_popular": true
+      },
+      {
+        "name": "高级版",
+        "monthly_price": "7.99",
+        "annual_price": "95.88",
+        "devices": 6,
+        "highlights": ["VPN保护", "密码管理器", "云存储加密"]
+      }
+    ],
+    "has_free_trial": false,
+    "free_trial_days": 0,
+    "money_back_days": 30,
+    "accepts_crypto": true,
+    "payment_methods": ["信用卡", "PayPal", "加密货币", "礼品卡"]
+  },
+  "ratings": {
+    "overall": 4.8,
+    "ease_of_use": 4.7,
+    "speed": 4.9,
+    "security": 4.9,
+    "value_for_money": 4.5,
+    "customer_support": 4.6,
+    "review_count": 18742
+  },
+  "performance": {
+    "avg_speed_mbps": 485,
+    "avg_latency_ms": 12,
+    "speed_loss_pct": 8,
+    "server_count": 5500,
+    "country_count": 62,
+    "tested_date": "2025-06-01"
+  },
+  "features": {
+    "simultaneous_devices": 6,
+    "protocols": ["OpenVPN", "WireGuard", "IKEv2", "NordLynx"],
+    "has_kill_switch": true,
+    "has_split_tunneling": true,
+    "has_double_vpn": true,
+    "has_tor_over_vpn": true,
+    "has_dedicated_ip": true,
+    "has_ad_blocker": true,
+    "has_malware_protection": true,
+    "no_logs_policy": true,
+    "no_logs_audited": true,
+    "auditor": "Deloitte",
+    "open_source": false,
+    "warrant_canary": true
+  },
+  "platform_support": {
+    "windows": true,
+    "mac": true,
+    "linux": true,
+    "ios": true,
+    "android": true,
+    "chrome_extension": true,
+    "firefox_extension": true,
+    "router": true,
+    "smart_tv": true,
+    "browser_extensions": ["Chrome", "Firefox", "Edge"]
+  },
+  "support": {
+    "has_live_chat": true,
+    "live_chat_hours": "24/7",
+    "has_email": true,
+    "has_phone": false,
+    "has_knowledge_base": true,
+    "response_time_minutes": 5,
+    "languages": ["中文", "英文", "西班牙文"]
+  },
+  "pros": [
+    "速度业内领先，4K流媒体无压力",
+    "通过独立审计的严格无日志政策",
+    "62个国家超5500台服务器",
+    "界面简洁，新手友好",
+    "30天无理由退款保证"
+  ],
+  "cons": [
+    "价格略高于部分竞品",
+    "不支持无限设备连接",
+    "部分服务器在高峰期速度下降"
+  ],
+  "best_for": ["流媒体解锁", "日常隐私保护", "远程办公", "翻墙首选"],
+  "not_good_for": ["需要无限设备的用户", "预算极有限的用户"],
+  "awards": [
+    { "title": "2024年最佳VPN", "from": "PCMag", "year": 2024 },
+    { "title": "编辑推荐", "from": "CNET", "year": 2024 }
+  ],
+  "comparison_tags": ["expressvpn", "surfshark", "cyberghost", "ipvanish"],
+  "deal": {
+    "is_active": true,
+    "discount_pct": 67,
+    "coupon_code": "SAVE67",
+    "original_price": "11.99",
+    "deal_price": "3.99",
+    "label": "限时67%折扣",
+    "description": "购买2年套餐立省67%，还赠送额外3个月",
+    "expires": "2025-12-31",
+    "is_exclusive": true
+  },
+  "seo": {
+    "main_keyword": "nordvpn评测",
+    "brand_keywords": ["nordvpn", "nord vpn", "nordvpn官网"],
+    "product_specific_keywords": ["nordvpn速度", "nordvpn安全吗", "nordvpn怎么样"],
+    "vs_keywords": ["nordvpn和expressvpn哪个好", "nordvpn vs surfshark"],
+    "coupon_keywords": ["nordvpn优惠码", "nordvpn折扣", "nordvpn优惠"],
+    "how_to_keywords": ["nordvpn怎么用", "nordvpn怎么安装", "nordvpn设置教程"],
+    "slug_keyword": "nordvpn",
+    "preferred_anchor_text": "NordVPN评测"
+  },
+  "meta": {
+    "created_at": "2025-01-01",
+    "updated_at": "2025-06-15",
+    "published": true,
+    "editor": "admin"
+  }
+}

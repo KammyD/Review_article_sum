@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StarRating from '../../components/StarRating.astro';
+
+const allPages    = await getCollection('pages', ({ data }) => data.meta.published && data.page_type === 'review');
+const allProducts = await getCollection('products');
+
+const listPage = {
+  slug: 'review-index', page_type: 'review', template_style: 'tech', product_ref: null,
+  seo: {
+    title: '产品深度评测 — 真实测试，独立推荐',
+    description: '独立测评团队真实测试，覆盖VPN、软件、家居、电子等品类，为你筛选最值得买的产品。',
+    keywords: { primary: '产品评测' },
+    on_page: { h1: '产品深度评测', h2_list: [], url_slug: 'review' },
+    schema: { type: 'WebPage' }, canonical: '/review',
+    og_image: '/images/og/default.png', index: true, follow: true,
+  },
+  hero: {}, meta: { publish_date: '2025-01-01', author: 'admin', published: true },
+};
+---
+
+<BaseLayout page={listPage}>
+  <section class="list-hero">
+    <div class="container">
+      <div class="breadcrumb-row"><a href="/">首页</a> <span>/</span> <span>评测</span></div>
+      <h1 class="list-h1">产品深度评测</h1>
+      <p class="list-sub">每篇评测均经过真实测试，包含速度、安全、价格全面分析</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="list-grid">
+      {allPages.map(p => {
+        const prod = allProducts.find(pr => pr.data.id === p.data.product_ref)?.data;
+        return (
+          <a href={`/review/${p.data.slug}`} class="list-card">
+            <div class="list-card-top">
+              {prod?.logo
+                ? <img src={prod.logo} alt={prod.name} class="list-logo" width="80" height="36" />
+                : <div class="list-logo-placeholder">{prod?.name?.charAt(0) ?? '?'}</div>
+              }
+              {prod?.ratings?.overall && <StarRating score={prod.ratings.overall} size="sm" />}
+            </div>
+            <h2 class="list-card-title">{p.data.seo.on_page.h1}</h2>
+            <p class="list-card-desc">{p.data.seo.description.slice(0, 90)}…</p>
+            <div class="list-card-footer">
+              {prod?.pricing?.starting_from && (
+                <span class="list-price">${prod.pricing.starting_from}/月起</span>
+              )}
+              <span class="list-read">阅读评测 →</span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+    {allPages.length === 0 && (
+      <div class="empty-state">
+        <p>暂无评测内容，请先运行 <code>npm run generate-pages</code> 生成页面数据。</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.list-hero { background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:40px 0 32px; }
+.breadcrumb-row { display:flex; gap:8px; font-size:13px; color:#94a3b8; margin-bottom:12px; }
+.breadcrumb-row a { color:#64748b; text-decoration:none; }
+.breadcrumb-row a:hover { color:#16a34a; }
+.list-h1  { font-size:clamp(1.5rem,3vw,2rem); font-weight:800; margin:0 0 8px; color:#0f172a; }
+.list-sub { color:#64748b; margin:0; font-size:15px; }
+.list-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; padding:40px 0; }
+.list-card{ display:flex; flex-direction:column; gap:10px; padding:24px; border:1px solid #e2e8f0; border-radius:14px; text-decoration:none; color:#111827; background:#fff; transition:box-shadow 0.2s,border-color 0.2s,transform 0.15s; }
+.list-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.08); border-color:#16a34a; transform:translateY(-2px); }
+.list-card-top { display:flex; align-items:center; justify-content:space-between; min-height:40px; }
+.list-logo { object-fit:contain; max-height:36px; }
+.list-logo-placeholder { width:40px; height:40px; border-radius:8px; background:#f0fdf4; color:#16a34a; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
+.list-card-title { font-size:15px; font-weight:700; margin:0; line-height:1.4; color:#0f172a; }
+.list-card-desc { font-size:13px; color:#64748b; margin:0; line-height:1.6; flex:1; }
+.list-card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+.list-price { font-size:13px; color:#16a34a; font-weight:600; }
+.list-read  { font-size:13px; color:#16a34a; font-weight:600; }
+.empty-state { text-align:center; padding:60px 20px; color:#94a3b8; }
+.empty-state code { background:#f1f5f9; padding:2px 8px; border-radius:4px; font-size:13px; }
+</style>

@@ -1,0 +1,44 @@
+{
+  "site": {
+    "name": "BestPicks",
+    "domain": "https://www.yoursite.com",
+    "default_locale": "zh-CN",
+    "default_og_image": "/images/og/default.png",
+    "twitter_handle": "@bestpicks"
+  },
+  "defaults": {
+    "title_suffix": " | BestPicks",
+    "title_separator": " - ",
+    "meta_robots": "index, follow",
+    "og_type": "article"
+  },
+  "global_keywords": {
+    "brand": ["BestPicks", "bestpicks评测"],
+    "trust": ["独立评测", "真实测评", "专业推荐"],
+    "intent": ["哪个好", "值得买吗", "推荐", "对比", "评测"]
+  },
+  "schema_defaults": {
+    "publisher": {
+      "@type": "Organization",
+      "name": "BestPicks",
+      "url": "https://www.yoursite.com",
+      "logo": "https://www.yoursite.com/images/logo.png"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "BestPicks 编辑团队"
+    }
+  },
+  "sitemap": {
+    "changefreq_review": "monthly",
+    "changefreq_deal": "daily",
+    "changefreq_best_of": "weekly",
+    "changefreq_how_to": "monthly",
+    "changefreq_brand": "monthly",
+    "priority_review": 0.9,
+    "priority_deal": 0.8,
+    "priority_best_of": 0.85,
+    "priority_how_to": 0.7,
+    "priority_brand": 0.75
+  }
+}

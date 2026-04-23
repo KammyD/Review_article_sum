@@ -1,0 +1,59 @@
+---
+/**
+ * UTMLink.astro
+ * 统一处理联盟链接 + UTM参数注入
+ * 所有对外联盟链接都必须通过此组件，不能直接写 <a href>
+ */
+interface Props {
+  href: string;
+  affiliateId?: string;
+  source?: string;       // utm_source
+  medium?: string;       // utm_medium
+  campaign?: string;     // utm_campaign (通常是 page slug)
+  position?: string;     // utm_content (按钮位置：hero / mid / end)
+  class?: string;
+  rel?: string;
+  target?: string;
+  children?: any;
+}
+
+const {
+  href,
+  affiliateId,
+  source = 'bestpicks',
+  medium = 'affiliate',
+  campaign = Astro.url.pathname.replace(/\//g, '-').slice(1),
+  position = 'cta',
+  class: className = '',
+  rel = 'noopener noreferrer sponsored',
+  target = '_blank',
+} = Astro.props;
+
+// 构建带 UTM 的链接
+function buildUrl(base: string): string {
+  try {
+    const url = new URL(base);
+    url.searchParams.set('utm_source', source);
+    url.searchParams.set('utm_medium', medium);
+    if (campaign) url.searchParams.set('utm_campaign', campaign);
+    if (position) url.searchParams.set('utm_content', position);
+    if (affiliateId) url.searchParams.set('ref', affiliateId);
+    return url.toString();
+  } catch {
+    return base;
+  }
+}
+
+const finalHref = buildUrl(href);
+---
+
+<a
+  href={finalHref}
+  class={className}
+  rel={rel}
+  target={target}
+  data-affiliate="true"
+  data-position={position}
+>
+  <slot />
+</a>

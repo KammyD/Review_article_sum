@@ -1,0 +1,19 @@
+{
+  "name": "affiliate-astro",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npx tsx scripts/validate-seo.ts && astro build",
+    "preview": "astro preview",
+    "validate-seo": "npx tsx scripts/validate-seo.ts",
+    "generate-pages": "npx tsx scripts/generate-pages.ts"
+  },
+  "dependencies": {
+    "astro": "^4.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

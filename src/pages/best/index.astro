@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allPages = await getCollection('pages', ({ data }) => data.meta.published && data.page_type === 'best-of');
+
+const listPage = {
+  slug: 'best-index', page_type: 'best-of', template_style: 'tech', product_ref: null,
+  seo: {
+    title: '产品排行榜 — 真实测试，权威推荐',
+    description: '经过真实测试的产品排行榜，覆盖多个品类，帮你快速找到最值得买的产品。每月更新。',
+    keywords: { primary: '产品排行榜推荐' },
+    on_page: { h1: '产品排行榜', h2_list: [], url_slug: 'best' },
+    schema: { type: 'WebPage' }, canonical: '/best',
+    og_image: '/images/og/default.png', index: true, follow: true,
+  },
+  hero: {}, meta: { publish_date: '2025-01-01', author: 'admin', published: true },
+};
+---
+
+<BaseLayout page={listPage}>
+  <section class="list-hero">
+    <div class="container">
+      <div class="breadcrumb-row"><a href="/">首页</a> <span>/</span> <span>榜单</span></div>
+      <h1 class="list-h1">产品排行榜</h1>
+      <p class="list-sub">每月更新 · 真实测试 · 覆盖多品类</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="best-grid">
+      {allPages.map((p, idx) => (
+        <a href={`/best/${p.data.slug}`} class="best-card">
+          <div class="best-rank">#{idx + 1}</div>
+          <div class="best-body">
+            <h2 class="best-title">{p.data.seo.on_page.h1}</h2>
+            <p class="best-desc">{p.data.seo.description.slice(0, 90)}…</p>
+            <span class="best-cta">查看榜单 →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+    {allPages.length === 0 && (
+      <div class="empty-state"><p>暂无榜单内容，请先生成页面数据。</p></div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.list-hero { background:linear-gradient(135deg,#eff6ff,#dbeafe); border-bottom:1px solid #bfdbfe; padding:40px 0 32px; }
+.breadcrumb-row { display:flex; gap:8px; font-size:13px; color:#3b82f6; margin-bottom:12px; }
+.breadcrumb-row a { color:#2563eb; text-decoration:none; }
+.list-h1  { font-size:clamp(1.5rem,3vw,2rem); font-weight:800; margin:0 0 8px; color:#1e3a8a; }
+.list-sub { color:#3b82f6; margin:0; font-size:15px; }
+.best-grid { display:flex; flex-direction:column; gap:14px; padding:40px 0; }
+.best-card { display:flex; align-items:center; gap:20px; padding:20px 24px; border:1px solid #dbeafe; border-radius:14px; text-decoration:none; color:#111827; background:#fff; transition:box-shadow 0.2s,border-color 0.2s,transform 0.15s; }
+.best-card:first-child { border:2px solid #3b82f6; background:#eff6ff; }
+.best-card:hover { box-shadow:0 6px 20px rgba(59,130,246,0.1); transform:translateX(4px); }
+.best-rank { font-size:2rem; font-weight:900; color:#bfdbfe; min-width:52px; text-align:center; flex-shrink:0; }
+.best-card:first-child .best-rank { color:#3b82f6; }
+.best-body { flex:1; }
+.best-title { font-size:15px; font-weight:700; margin:0 0 6px; color:#0f172a; line-height:1.4; }
+.best-desc  { font-size:13px; color:#64748b; margin:0 0 8px; line-height:1.5; }
+.best-cta   { font-size:13px; color:#2563eb; font-weight:600; }
+.empty-state { text-align:center; padding:60px 20px; color:#94a3b8; }
+</style>

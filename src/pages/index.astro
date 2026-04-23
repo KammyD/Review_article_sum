@@ -1,0 +1,423 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StarRating from '../components/StarRating.astro';
+
+const allPages    = await getCollection('pages', ({ data }) => data.meta.published);
+const allProducts = await getCollection('products');
+
+const reviews = allPages.filter(p => p.data.page_type === 'review').slice(0, 3);
+const deals   = allPages.filter(p => p.data.page_type === 'deal').slice(0, 3);
+const bestOfs = allPages.filter(p => p.data.page_type === 'best-of').slice(0, 3);
+const howTos  = allPages.filter(p => p.data.page_type === 'how-to').slice(0, 3);
+
+const homePage = {
+  slug: 'home', page_type: 'review', template_style: 'tech', product_ref: null,
+  seo: {
+    title: '最真实的产品评测与优惠推荐 — BestPicks',
+    description: '独立测评团队真实测试，筛选最值得买的产品。含速度测试、安全分析、价格对比，附独家优惠码。',
+    keywords: { primary: '产品评测推荐' },
+    on_page: { h1: '最真实的产品评测与推荐', h2_list: [], url_slug: '' },
+    schema: { type: 'WebSite' }, canonical: '/',
+    og_image: '/images/og/default.png', index: true, follow: true,
+  },
+  hero: {}, meta: { publish_date: '2025-01-01', author: 'admin', published: true },
+};
+---
+
+<BaseLayout page={homePage}>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <div class="hero-label">独立评测 · 真实数据 · 每月更新</div>
+          <h1 class="hero-h1">找到最值得买的产品<br/>省时省钱不踩坑</h1>
+          <p class="hero-p">我们真实测试，替你做功课。每篇评测都经过深度使用，价格、速度、安全性全部说清楚。</p>
+          <div class="hero-btns">
+            <a href="/review" class="btn-primary">查看最新评测</a>
+            <a href="/deals" class="btn-secondary">领取今日优惠</a>
+          </div>
+        </div>
+        <div class="hero-stats-col">
+          <div class="stat-card">
+            <span class="stat-n">{allProducts.length}+</span>
+            <span class="stat-l">产品已评测</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-n">{allPages.length}+</span>
+            <span class="stat-l">评测页面</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-n">100%</span>
+            <span class="stat-l">独立测试</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-n">30天</span>
+            <span class="stat-l">平均测试周期</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 产品 Logo 墙 ══ -->
+  {allProducts.length > 0 && (
+    <section class="logo-wall">
+      <div class="container">
+        <p class="logo-wall-label">已测评产品</p>
+        <div class="logo-row">
+          {allProducts.map(p => (
+            p.data.logo
+              ? <img src={p.data.logo} alt={p.data.name} class="product-logo" width="90" height="36" />
+              : <div class="product-logo-text">{p.data.name}</div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ══ 品类导航卡片 ══ -->
+  <section class="categories">
+    <div class="container">
+      <h2 class="sec-title">选择你感兴趣的品类</h2>
+      <div class="cat-grid">
+        <a href="/review" class="cat-card cat-review">
+          <div class="cat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+          </div>
+          <div class="cat-body">
+            <div class="cat-name">深度评测</div>
+            <div class="cat-desc">真实测试，一次看清优缺点</div>
+          </div>
+          <span class="cat-count">{allPages.filter(p=>p.data.page_type==='review').length} 篇</span>
+        </a>
+        <a href="/deals" class="cat-card cat-deal">
+          <div class="cat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </div>
+          <div class="cat-body">
+            <div class="cat-name">优惠 & 折扣</div>
+            <div class="cat-desc">独家优惠码，每日更新验证</div>
+          </div>
+          <span class="cat-count">{allPages.filter(p=>p.data.page_type==='deal').length} 个</span>
+        </a>
+        <a href="/best" class="cat-card cat-best">
+          <div class="cat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="cat-body">
+            <div class="cat-name">排行榜单</div>
+            <div class="cat-desc">测试对比，筛出最值得买的</div>
+          </div>
+          <span class="cat-count">{allPages.filter(p=>p.data.page_type==='best-of').length} 篇</span>
+        </a>
+        <a href="/how-to" class="cat-card cat-howto">
+          <div class="cat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="cat-body">
+            <div class="cat-name">使用教程</div>
+            <div class="cat-desc">图文教程，新手5分钟上手</div>
+          </div>
+          <span class="cat-count">{allPages.filter(p=>p.data.page_type==='how-to').length} 篇</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ══ 最新评测 ══ -->
+    {reviews.length > 0 && (
+      <section class="home-section">
+        <div class="sec-head">
+          <div>
+            <h2 class="sec-title" style="margin-bottom:4px">最新深度评测</h2>
+            <p class="sec-sub">每篇均经过真实测试，含完整优缺点分析</p>
+          </div>
+          <a href="/review" class="see-all">查看全部 →</a>
+        </div>
+        <div class="review-grid">
+          {reviews.map(p => {
+            const prod = allProducts.find(pr => pr.data.id === p.data.product_ref)?.data;
+            return (
+              <a href={`/review/${p.data.slug}`} class="review-card">
+                <div class="rc-top">
+                  {prod?.logo
+                    ? <img src={prod.logo} alt={prod.name} class="rc-logo" width="80" height="34" />
+                    : <div class="rc-logo-ph">{prod?.name?.charAt(0) ?? '?'}</div>
+                  }
+                  {prod?.ratings?.overall && <StarRating score={prod.ratings.overall} size="sm" />}
+                </div>
+                <h3 class="rc-title">{p.data.seo.on_page.h1}</h3>
+                <p class="rc-desc">{p.data.seo.description.slice(0, 75)}…</p>
+                <div class="rc-footer">
+                  {prod?.pricing?.starting_from && (
+                    <span class="rc-price">${prod.pricing.starting_from}/月起</span>
+                  )}
+                  <span class="rc-read">阅读评测 →</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 今日优惠 ══ -->
+    {deals.length > 0 && (
+      <section class="home-section">
+        <div class="sec-head">
+          <div>
+            <h2 class="sec-title" style="margin-bottom:4px">今日优惠码</h2>
+            <p class="sec-sub">每日更新，均已验证可用</p>
+          </div>
+          <a href="/deals" class="see-all">查看全部 →</a>
+        </div>
+        <div class="deal-grid">
+          {deals.map(p => {
+            const prod = allProducts.find(pr => pr.data.id === p.data.product_ref)?.data;
+            const deal = prod?.deal;
+            return (
+              <a href={`/deals/${p.data.slug}`} class="deal-card">
+                <div class="dc-header">
+                  {prod?.logo
+                    ? <img src={prod.logo} alt={prod.name} class="dc-logo" width="80" height="32" />
+                    : <div class="dc-logo-ph">{prod?.name?.charAt(0) ?? '?'}</div>
+                  }
+                  {deal?.is_exclusive && <span class="dc-excl">独家</span>}
+                </div>
+                {deal?.discount_pct && (
+                  <div class="dc-pct">省 {deal.discount_pct}%</div>
+                )}
+                <div class="dc-name">{prod?.name ?? p.data.seo.on_page.h1}</div>
+                {deal?.coupon_code && (
+                  <div class="dc-code-row">
+                    <span class="dc-code">{deal.coupon_code}</span>
+                  </div>
+                )}
+                {deal?.deal_price && (
+                  <div class="dc-price">折后 ${deal.deal_price}/月起</div>
+                )}
+                <div class="dc-cta">立即领取 →</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 热门榜单 ══ -->
+    {bestOfs.length > 0 && (
+      <section class="home-section">
+        <div class="sec-head">
+          <div>
+            <h2 class="sec-title" style="margin-bottom:4px">热门排行榜</h2>
+            <p class="sec-sub">测试对比多款产品，找出最值得买的</p>
+          </div>
+          <a href="/best" class="see-all">查看全部 →</a>
+        </div>
+        <div class="best-list">
+          {bestOfs.map((p, idx) => (
+            <a href={`/best/${p.data.slug}`} class="best-row">
+              <span class="best-n">#{idx + 1}</span>
+              <div class="best-body">
+                <div class="best-title">{p.data.seo.on_page.h1}</div>
+                <div class="best-desc">{p.data.seo.description.slice(0, 70)}…</div>
+              </div>
+              <span class="best-arr">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 实用教程 ══ -->
+    {howTos.length > 0 && (
+      <section class="home-section">
+        <div class="sec-head">
+          <div>
+            <h2 class="sec-title" style="margin-bottom:4px">实用教程</h2>
+            <p class="sec-sub">图文并茂，5分钟快速上手</p>
+          </div>
+          <a href="/how-to" class="see-all">查看全部 →</a>
+        </div>
+        <div class="howto-list">
+          {howTos.map(p => {
+            const prod = allProducts.find(pr => pr.data.id === p.data.product_ref)?.data;
+            return (
+              <a href={`/how-to/${p.data.slug}`} class="howto-row">
+                <div class="ht-icon">
+                  {prod?.logo
+                    ? <img src={prod.logo} alt={prod?.name ?? ''} class="ht-logo" width="40" height="20" />
+                    : <span class="ht-icon-text">✦</span>
+                  }
+                </div>
+                <div class="ht-body">
+                  <div class="ht-title">{p.data.seo.on_page.h1}</div>
+                  <div class="ht-desc">{p.data.seo.description.slice(0, 60)}…</div>
+                </div>
+                <span class="ht-arr">→</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- ══ 信任区块 ══ -->
+    <section class="trust-section">
+      <h2 class="sec-title" style="text-align:center;margin-bottom:8px">为什么信任我们的评测？</h2>
+      <p class="trust-sub">我们的评测标准和流程</p>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon-wrap" style="background:#f0fdf4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="trust-title">真实购买测试</div>
+          <div class="trust-desc">我们用自己的钱购买每款产品，确保测评的真实性和客观性</div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon-wrap" style="background:#eff6ff">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="trust-title">数据驱动评分</div>
+          <div class="trust-desc">每项评分都有具体测试数据支撑，速度/安全/价格均量化对比</div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon-wrap" style="background:#fef9c3">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="trust-title">持续跟踪更新</div>
+          <div class="trust-desc">产品更新、价格变动、优惠码变化，我们定期回测并更新评测内容</div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon-wrap" style="background:#f5f3ff">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="trust-title">用户利益优先</div>
+          <div class="trust-desc">即使产品不给我们佣金，我们也会如实写出缺点，评测结果不受商业合作影响</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+/* ── Hero ── */
+.hero { background:#0f172a; color:#fff; padding:72px 0 56px; overflow:hidden; }
+.hero-inner { display:grid; grid-template-columns:1fr auto; gap:48px; align-items:center; }
+@media(max-width:680px){ .hero-inner { grid-template-columns:1fr; } .hero-stats-col { display:grid!important; grid-template-columns:1fr 1fr; } }
+.hero-label { font-size:12px; font-weight:600; color:#38bdf8; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px; }
+.hero-h1 { font-size:clamp(1.75rem,4vw,2.75rem); font-weight:900; margin:0 0 16px; color:#f8fafc; line-height:1.2; }
+.hero-p  { font-size:16px; color:#94a3b8; margin:0 0 28px; line-height:1.7; max-width:500px; }
+.hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-primary  { padding:12px 24px; background:#16a34a; color:#fff; border-radius:8px; font-weight:700; font-size:15px; text-decoration:none; transition:background 0.2s; }
+.btn-primary:hover { background:#15803d; }
+.btn-secondary{ padding:12px 24px; background:transparent; color:#e2e8f0; border:1.5px solid #334155; border-radius:8px; font-weight:600; font-size:15px; text-decoration:none; transition:border-color 0.2s,color 0.2s; }
+.btn-secondary:hover { border-color:#94a3b8; color:#fff; }
+.hero-stats-col { display:flex; flex-direction:column; gap:12px; }
+.stat-card { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:16px 20px; text-align:center; min-width:120px; }
+.stat-n { display:block; font-size:1.75rem; font-weight:800; color:#38bdf8; line-height:1; }
+.stat-l { display:block; font-size:12px; color:#64748b; margin-top:4px; }
+
+/* ── Logo Wall ── */
+.logo-wall { background:#f8fafc; border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; padding:20px 0; }
+.logo-wall-label { font-size:11px; color:#94a3b8; text-align:center; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px; }
+.logo-row { display:flex; justify-content:center; align-items:center; gap:32px; flex-wrap:wrap; }
+.product-logo { object-fit:contain; max-height:32px; opacity:0.6; filter:grayscale(1); transition:opacity 0.2s,filter 0.2s; }
+.product-logo:hover { opacity:1; filter:none; }
+.product-logo-text { font-size:14px; font-weight:700; color:#94a3b8; padding:6px 14px; border:1px solid #e2e8f0; border-radius:6px; }
+
+/* ── Categories ── */
+.categories { padding:56px 0 0; }
+.cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; margin-top:24px; }
+.cat-card { display:flex; align-items:center; gap:14px; padding:18px; border:1.5px solid #e2e8f0; border-radius:12px; text-decoration:none; color:#111827; background:#fff; transition:box-shadow 0.2s,border-color 0.2s,transform 0.15s; }
+.cat-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.07); transform:translateY(-2px); }
+.cat-review:hover { border-color:#16a34a; }
+.cat-deal:hover   { border-color:#f59e0b; }
+.cat-best:hover   { border-color:#3b82f6; }
+.cat-howto:hover  { border-color:#a855f7; }
+.cat-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.cat-review .cat-icon { background:#f0fdf4; color:#16a34a; }
+.cat-deal .cat-icon   { background:#fffbeb; color:#d97706; }
+.cat-best .cat-icon   { background:#eff6ff; color:#2563eb; }
+.cat-howto .cat-icon  { background:#f5f3ff; color:#7c3aed; }
+.cat-body { flex:1; }
+.cat-name { font-size:14px; font-weight:700; color:#0f172a; margin-bottom:2px; }
+.cat-desc { font-size:12px; color:#6b7280; }
+.cat-count{ font-size:12px; font-weight:600; color:#94a3b8; white-space:nowrap; flex-shrink:0; }
+
+/* ── Section共用 ── */
+.home-section { padding:48px 0; border-bottom:1px solid #f1f5f9; }
+.home-section:last-of-type { border-bottom:none; }
+.sec-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; }
+.sec-title { font-size:1.3rem; font-weight:800; margin:0; color:#0f172a; }
+.sec-sub  { font-size:13px; color:#94a3b8; margin:0; }
+.see-all  { font-size:13px; color:#16a34a; text-decoration:none; font-weight:600; white-space:nowrap; }
+.see-all:hover { text-decoration:underline; }
+
+/* ── Review Cards ── */
+.review-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+.review-card { display:flex; flex-direction:column; gap:10px; padding:22px; border:1px solid #e2e8f0; border-radius:14px; text-decoration:none; color:#111827; background:#fff; transition:box-shadow 0.2s,border-color 0.2s,transform 0.15s; }
+.review-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.08); border-color:#16a34a; transform:translateY(-2px); }
+.rc-top { display:flex; align-items:center; justify-content:space-between; min-height:38px; }
+.rc-logo { object-fit:contain; max-height:34px; }
+.rc-logo-ph { width:38px; height:38px; border-radius:8px; background:#f0fdf4; color:#16a34a; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; }
+.rc-title { font-size:15px; font-weight:700; margin:0; line-height:1.4; color:#0f172a; }
+.rc-desc  { font-size:13px; color:#64748b; margin:0; line-height:1.6; flex:1; }
+.rc-footer { display:flex; align-items:center; justify-content:space-between; padding-top:8px; border-top:1px solid #f1f5f9; margin-top:4px; }
+.rc-price { font-size:13px; color:#16a34a; font-weight:600; }
+.rc-read  { font-size:13px; color:#16a34a; font-weight:600; }
+
+/* ── Deal Cards ── */
+.deal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+.deal-card { display:flex; flex-direction:column; gap:10px; padding:20px; border:1.5px solid #fde68a; border-radius:14px; text-decoration:none; color:#111827; background:#fffbf5; transition:box-shadow 0.2s,transform 0.15s; }
+.deal-card:hover { box-shadow:0 8px 24px rgba(251,191,36,0.18); transform:translateY(-2px); }
+.dc-header { display:flex; align-items:center; justify-content:space-between; min-height:36px; }
+.dc-logo { object-fit:contain; max-height:32px; }
+.dc-logo-ph { width:36px; height:36px; border-radius:8px; background:#fef9c3; color:#92400e; display:flex; align-items:center; justify-content:center; font-weight:700; }
+.dc-excl { padding:2px 8px; background:#f59e0b; color:#fff; border-radius:4px; font-size:11px; font-weight:700; }
+.dc-pct  { font-size:2rem; font-weight:900; color:#dc2626; line-height:1; }
+.dc-name { font-size:14px; font-weight:700; color:#1c1917; }
+.dc-code-row { background:#1e293b; border-radius:6px; padding:8px 12px; }
+.dc-code { font-family:monospace; font-size:15px; font-weight:800; color:#fbbf24; letter-spacing:0.1em; }
+.dc-price { font-size:13px; color:#16a34a; font-weight:600; }
+.dc-cta   { font-size:13px; color:#d97706; font-weight:700; margin-top:2px; }
+
+/* ── Best List ── */
+.best-list { display:flex; flex-direction:column; gap:10px; }
+.best-row  { display:flex; align-items:center; gap:16px; padding:16px 20px; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; color:#111827; background:#fff; transition:box-shadow 0.2s,border-color 0.2s,transform 0.15s; }
+.best-row:first-child { border:2px solid #3b82f6; background:#eff6ff; }
+.best-row:hover { box-shadow:0 4px 16px rgba(0,0,0,0.07); border-color:#3b82f6; transform:translateX(4px); }
+.best-n { font-size:1.5rem; font-weight:900; color:#bfdbfe; min-width:40px; text-align:center; flex-shrink:0; }
+.best-row:first-child .best-n { color:#3b82f6; }
+.best-body { flex:1; }
+.best-title { font-size:14px; font-weight:700; color:#0f172a; margin-bottom:3px; }
+.best-desc  { font-size:12px; color:#64748b; }
+.best-arr   { color:#3b82f6; font-size:16px; font-weight:700; flex-shrink:0; }
+
+/* ── HowTo List ── */
+.howto-list { display:flex; flex-direction:column; gap:10px; }
+.howto-row  { display:flex; align-items:center; gap:14px; padding:14px 18px; border:1px solid #e9d5ff; border-radius:12px; text-decoration:none; color:#111827; background:#fff; transition:box-shadow 0.2s,transform 0.15s; }
+.howto-row:hover { box-shadow:0 4px 14px rgba(124,58,237,0.09); border-color:#a855f7; transform:translateX(4px); }
+.ht-icon { width:44px; height:44px; border-radius:10px; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ht-logo { object-fit:contain; max-height:20px; }
+.ht-icon-text { font-size:16px; color:#a855f7; }
+.ht-body { flex:1; }
+.ht-title { font-size:14px; font-weight:700; color:#1e1b4b; margin-bottom:3px; }
+.ht-desc  { font-size:12px; color:#6b7280; }
+.ht-arr   { color:#a855f7; font-size:16px; font-weight:700; flex-shrink:0; }
+
+/* ── Trust Section ── */
+.trust-section { padding:48px 0 64px; text-align:left; }
+.trust-sub { text-align:center; font-size:14px; color:#94a3b8; margin:0 0 32px; }
+.trust-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+.trust-card { padding:24px; border:1px solid #e2e8f0; border-radius:14px; background:#fff; }
+.trust-icon-wrap { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+.trust-title { font-size:14px; font-weight:700; color:#0f172a; margin-bottom:8px; }
+.trust-desc  { font-size:13px; color:#64748b; line-height:1.6; }
+</style>

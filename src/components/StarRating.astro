@@ -1,0 +1,20 @@
+---
+interface Props {
+  score: number;
+  max?: number;
+  showNumber?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+}
+const { score, max = 5, showNumber = true, size = 'md' } = Astro.props;
+const filled = Math.floor(score);
+const partial = score % 1;
+const empty = max - filled - (partial > 0 ? 1 : 0);
+const sizes = { sm: '14px', md: '18px', lg: '24px' };
+const px = sizes[size];
+---
+<span class="star-rating" style={`display:inline-flex;align-items:center;gap:2px;font-size:${px}`}>
+  {Array(filled).fill(0).map(() => <span style="color:#f59e0b">★</span>)}
+  {partial > 0 && <span style="color:#f59e0b;opacity:0.5">★</span>}
+  {Array(empty).fill(0).map(() => <span style="color:#d1d5db">★</span>)}
+  {showNumber && <span style={`margin-left:4px;font-size:calc(${px} * 0.85);color:var(--text-secondary,#6b7280);font-weight:500`}>{score.toFixed(1)}</span>}
+</span>

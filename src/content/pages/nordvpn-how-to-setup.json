@@ -1,0 +1,127 @@
+{
+  "slug": "nordvpn-how-to-setup",
+  "page_type": "how-to",
+  "template_style": "tech",
+  "product_ref": "nordvpn",
+
+  "seo": {
+    "title": "如何使用NordVPN：5步详细图文教程 2025",
+    "description": "手把手教你安装和使用NordVPN，全程5分钟，适合新手。含Windows/Mac/手机全平台教程，附常见问题解决方案。",
+    "keywords": {
+      "primary": "nordvpn怎么用",
+      "secondary": ["nordvpn怎么安装", "nordvpn设置教程", "nordvpn使用方法", "nordvpn新手教程"],
+      "lsi": ["vpn安装教程", "vpn使用方法", "vpn设置步骤"],
+      "long_tail": ["nordvpn手机怎么用", "nordvpn连不上怎么办", "nordvpn选哪个服务器"],
+      "negative": []
+    },
+    "on_page": {
+      "h1": "如何使用NordVPN：5步详细图文教程（2025新手版）",
+      "h2_list": [
+        "第一步：注册NordVPN账号",
+        "第二步：下载安装客户端",
+        "第三步：登录并连接服务器",
+        "第四步：验证连接是否成功",
+        "第五步：根据需求选择最佳服务器",
+        "常见问题：连不上怎么办？"
+      ],
+      "url_slug": "nordvpn-how-to-setup",
+      "keyword_in_first_100_words": true,
+      "image_alts": ["NordVPN注册页面截图", "NordVPN下载页面", "NordVPN连接界面", "VPN连接成功验证"]
+    },
+    "schema": {
+      "type": "HowTo",
+      "how_to_name": "如何安装和使用NordVPN",
+      "total_time": "PT5M",
+      "estimated_cost_value": "3.99",
+      "estimated_cost_currency": "USD"
+    },
+    "canonical": "/how-to/nordvpn-how-to-setup",
+    "og_image": "/images/og/nordvpn-how-to.png",
+    "og_title": "NordVPN使用教程：5步学会，新手必看",
+    "og_description": "最详细的NordVPN安装使用教程，全程5分钟，含图文步骤和常见问题解答。",
+    "index": true,
+    "follow": true,
+    "priority": 0.7,
+    "changefreq": "monthly"
+  },
+
+  "hero": {
+    "headline": "如何使用NordVPN：5步详细图文教程（2025新手版）",
+    "subheadline": "全程5分钟 · 图文并茂 · Windows/Mac/手机全平台",
+    "cta_primary_text": "先领取67%折扣再跟着教程操作",
+    "badge_text": "新手友好"
+  },
+
+  "steps": [
+    {
+      "position": 1,
+      "name": "注册NordVPN账号",
+      "text": "访问NordVPN官网，点击「获取NordVPN」，选择套餐后填写邮箱和支付信息完成注册。建议选择2年套餐，性价比最高。",
+      "image": "/images/how-to/nordvpn-step1-register.png",
+      "image_alt": "NordVPN注册页面截图",
+      "tip": "使用我们的专属链接可获得额外67%折扣"
+    },
+    {
+      "position": 2,
+      "name": "下载安装NordVPN客户端",
+      "text": "注册完成后，在NordVPN官网下载对应平台的客户端：Windows可从官网或Microsoft Store下载；Mac从官网或App Store下载；iOS/Android直接在应用商店搜索「NordVPN」安装。",
+      "image": "/images/how-to/nordvpn-step2-download.png",
+      "image_alt": "NordVPN下载页面截图"
+    },
+    {
+      "position": 3,
+      "name": "登录并连接服务器",
+      "text": "安装完成后打开NordVPN，使用注册的邮箱和密码登录。点击地图上的任意国家或使用「快速连接」按钮，客户端会自动选择最快的服务器。",
+      "image": "/images/how-to/nordvpn-step3-connect.png",
+      "image_alt": "NordVPN连接界面截图"
+    },
+    {
+      "position": 4,
+      "name": "验证VPN连接是否成功",
+      "text": "连接成功后，界面会变为绿色并显示已连接的服务器位置。访问 ipleak.net 验证你的IP地址是否已变更为所选服务器所在国家。",
+      "image": "/images/how-to/nordvpn-step4-verify.png",
+      "image_alt": "IP泄露检测页面截图"
+    },
+    {
+      "position": 5,
+      "name": "根据需求选择最佳服务器",
+      "text": "看Netflix选「流媒体」专线服务器；需要最快速度选「快速连接」；注重隐私选「混淆服务器」或「双重VPN」；种子下载选带P2P标签的服务器。",
+      "image": "/images/how-to/nordvpn-step5-servers.png",
+      "image_alt": "NordVPN服务器选择界面"
+    }
+  ],
+
+  "troubleshooting": [
+    {
+      "problem": "NordVPN连不上怎么办？",
+      "solution": "尝试切换协议（设置→VPN协议→NordLynx或OpenVPN），或切换不同地区的服务器，也可以尝试开启「混淆服务器」模式。"
+    },
+    {
+      "problem": "NordVPN连上了但网速很慢？",
+      "solution": "选择距离最近的服务器，或使用NordLynx协议（基于WireGuard，速度最快）。避开高峰期或换一个同国家的不同服务器。"
+    }
+  ],
+
+  "faqs": [
+    {
+      "q": "NordVPN在手机上怎么用？",
+      "a": "在App Store或Google Play搜索「NordVPN」下载安装，登录账号后点击快速连接即可，操作与电脑端完全一样简单。",
+      "keyword": "nordvpn手机使用"
+    },
+    {
+      "q": "NordVPN连不上服务器怎么办？",
+      "a": "建议依次尝试：1.切换VPN协议为NordLynx；2.更换其他服务器节点；3.开启混淆服务器；4.重启应用和网络。",
+      "keyword": "nordvpn连不上"
+    }
+  ],
+
+  "related_pages": ["nordvpn-review", "nordvpn-coupon"],
+
+  "meta": {
+    "publish_date": "2025-02-01",
+    "update_date": "2025-06-01",
+    "update_reason": "更新2025年最新界面截图",
+    "author": "admin",
+    "published": true
+  }
+}

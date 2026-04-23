@@ -1,0 +1,36 @@
+---
+import UTMLink from './UTMLink.astro';
+interface Props {
+  href: string;
+  text: string;
+  subText?: string;
+  affiliateId?: string;
+  position?: string;
+  style?: 'primary' | 'secondary' | 'ghost';
+  showPrice?: boolean;
+  price?: string;
+  campaign?: string;
+  fullWidth?: boolean;
+}
+const {
+  href, text, subText, affiliateId, position = 'cta',
+  style = 'primary', showPrice = false, price, campaign, fullWidth = false,
+} = Astro.props;
+
+const styles: Record<string, string> = {
+  primary:   'display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:#16a34a;color:#fff;padding:14px 32px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none;border:none;cursor:pointer;transition:background 0.2s;gap:4px',
+  secondary: 'display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;color:#16a34a;padding:12px 28px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;border:2px solid #16a34a;cursor:pointer;transition:all 0.2s;gap:4px',
+  ghost:     'display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;color:#6b7280;padding:10px 20px;border-radius:8px;font-weight:500;font-size:14px;text-decoration:none;border:1px solid #e5e7eb;cursor:pointer;gap:4px',
+};
+const btnStyle = styles[style] + (fullWidth ? ';width:100%' : '');
+---
+
+<UTMLink href={href} affiliateId={affiliateId} position={position} campaign={campaign} class="cta-btn" style={btnStyle}>
+  <span style="font-weight:700">{text}</span>
+  {showPrice && price && (
+    <span style="font-size:12px;opacity:0.85">最低 {price}/月起</span>
+  )}
+  {subText && (
+    <span style="font-size:12px;opacity:0.75">{subText}</span>
+  )}
+</UTMLink>

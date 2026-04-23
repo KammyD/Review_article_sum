@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allPages    = await getCollection('pages', ({ data }) => data.meta.published && data.page_type === 'deal');
+const allProducts = await getCollection('products');
+
+const listPage = {
+  slug: 'deals-index', page_type: 'deal', template_style: 'tech', product_ref: null,
+  seo: {
+    title: '最新优惠码与折扣 — 每日更新，独家专属',
+    description: '汇总最新联盟产品优惠码和折扣活动，每日更新，均已验证可用，助你以最低价格购买。',
+    keywords: { primary: '产品优惠码' },
+    on_page: { h1: '最新优惠码与折扣', h2_list: [], url_slug: 'deals' },
+    schema: { type: 'WebPage' }, canonical: '/deals',
+    og_image: '/images/og/default.png', index: true, follow: true,
+  },
+  hero: {}, meta: { publish_date: '2025-01-01', author: 'admin', published: true },
+};
+---
+
+<BaseLayout page={listPage}>
+  <section class="list-hero">
+    <div class="container">
+      <div class="breadcrumb-row"><a href="/">首页</a> <span>/</span> <span>优惠</span></div>
+      <h1 class="list-h1">最新优惠码与折扣</h1>
+      <p class="list-sub">每日更新 · 均已验证可用 · 独家专属折扣</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="deals-grid">
+      {allPages.map(p => {
+        const prod = allProducts.find(pr => pr.data.id === p.data.product_ref)?.data;
+        const deal = prod?.deal;
+        return (
+          <a href={`/deals/${p.data.slug}`} class="deal-card">
+            <div class="deal-card-header">
+              {prod?.logo
+                ? <img src={prod.logo} alt={prod.name} class="deal-logo" width="80" height="32" />
+                : <div class="deal-logo-placeholder">{prod?.name?.charAt(0) ?? '?'}</div>
+              }
+              {deal?.is_exclusive && <span class="exclusive-tag">独家</span>}
+            </div>
+            {deal?.discount_pct && (
+              <div class="deal-discount">省 {deal.discount_pct}%</div>
+            )}
+            <h2 class="deal-title">{p.data.seo.on_page.h1}</h2>
+            {deal?.coupon_code && (
+              <div class="deal-coupon-row">
+                <span class="deal-code">{deal.coupon_code}</span>
+                <span class="deal-copy">复制</span>
+              </div>
+            )}
+            <div class="deal-footer">
+              {deal?.deal_price && prod?.pricing?.currency && (
+                <span class="deal-price">{prod.pricing.currency === 'USD' ? '$' : ''}{deal.deal_price}/月起</span>
+              )}
+              <span class="deal-cta">领取优惠 →</span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+    {allPages.length === 0 && (
+      <div class="empty-state"><p>暂无优惠内容，请先生成页面数据。</p></div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.list-hero { background:linear-gradient(135deg,#fffbeb,#fef3c7); border-bottom:1px solid #fde68a; padding:40px 0 32px; }
+.breadcrumb-row { display:flex; gap:8px; font-size:13px; color:#92400e; margin-bottom:12px; }
+.breadcrumb-row a { color:#b45309; text-decoration:none; }
+.list-h1  { font-size:clamp(1.5rem,3vw,2rem); font-weight:800; margin:0 0 8px; color:#78350f; }
+.list-sub { color:#92400e; margin:0; font-size:15px; }
+.deals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; padding:40px 0; }
+.deal-card { display:flex; flex-direction:column; gap:10px; padding:22px; border:1px solid #fde68a; border-radius:14px; text-decoration:none; color:#111827; background:#fffbf5; transition:box-shadow 0.2s,transform 0.15s; }
+.deal-card:hover { box-shadow:0 8px 24px rgba(251,191,36,0.2); transform:translateY(-2px); }
+.deal-card-header { display:flex; align-items:center; justify-content:space-between; min-height:36px; }
+.deal-logo { object-fit:contain; max-height:32px; }
+.deal-logo-placeholder { width:36px; height:36px; border-radius:8px; background:#fef9c3; color:#92400e; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; }
+.exclusive-tag { padding:2px 8px; background:#f59e0b; color:#fff; border-radius:4px; font-size:11px; font-weight:700; }
+.deal-discount { font-size:2rem; font-weight:900; color:#dc2626; line-height:1; }
+.deal-title { font-size:14px; font-weight:600; margin:0; line-height:1.4; color:#1c1917; }
+.deal-coupon-row { display:flex; align-items:center; gap:8px; background:#1e293b; border-radius:6px; padding:8px 12px; }
+.deal-code { font-family:monospace; font-size:15px; font-weight:800; color:#fbbf24; letter-spacing:0.1em; flex:1; }
+.deal-copy { font-size:11px; color:#94a3b8; font-weight:500; }
+.deal-footer { display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+.deal-price { font-size:13px; color:#16a34a; font-weight:600; }
+.deal-cta   { font-size:13px; color:#d97706; font-weight:700; }
+.empty-state { text-align:center; padding:60px 20px; color:#94a3b8; }
+</style>

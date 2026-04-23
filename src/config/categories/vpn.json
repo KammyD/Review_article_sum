@@ -1,0 +1,43 @@
+{
+  "category_id": "vpn",
+  "category_name": "VPN服务",
+  "category_keywords": {
+    "head_terms": ["vpn推荐", "最好的vpn", "vpn哪个好"],
+    "modifier_terms": ["2025", "国内可用", "适合流媒体", "高速", "便宜"],
+    "pain_points": ["vpn连不上", "vpn速度慢", "翻墙工具"],
+    "use_case_terms": ["netflix vpn", "流媒体vpn", "游戏vpn", "企业vpn"],
+    "lsi_terms": ["隐私保护", "无日志政策", "ip隐藏", "加密协议", "wireguard", "kill switch"]
+  },
+  "page_type_keyword_templates": {
+    "review": {
+      "title_pattern": "{brand}评测 {year}：{verdict}？",
+      "h1_pattern": "{brand}深度评测：{year}最{superlative}的VPN服务？",
+      "description_pattern": "亲测{brand} {duration}天，{key_metric}。优缺点、价格全面分析。附{discount}折扣码。"
+    },
+    "deal": {
+      "title_pattern": "{brand}优惠码 {year}：最新折扣{discount}%",
+      "h1_pattern": "{brand}最新优惠 {year}{month}：独家{discount}%折扣码",
+      "description_pattern": "最新{brand}优惠码，立省{discount}%。验证可用，{expires}前有效。"
+    },
+    "best_of": {
+      "title_pattern": "{year}年最好用的{top_n}款VPN排行榜",
+      "h1_pattern": "{year}年最好的{top_n}款VPN排行榜：测试{count}款后的真实排名",
+      "description_pattern": "我们测试了{count}款VPN，筛选出{year}年最值得买的{top_n}款，含价格、速度、安全性对比。"
+    },
+    "how_to": {
+      "title_pattern": "{task}完整教程 {year}：{duration}分钟学会",
+      "h1_pattern": "如何{task}：{steps}步详细图文教程",
+      "description_pattern": "手把手教你{task}，全程{duration}分钟，适合新手。附常见问题解决方案。"
+    },
+    "brand": {
+      "title_pattern": "{brand}官网介绍：功能、价格、评价全解析",
+      "h1_pattern": "{brand}完整指南：功能、价格、评价全解析",
+      "description_pattern": "{brand}的功能、定价、优缺点详细介绍。含用户评价、独家优惠码及购买建议。"
+    }
+  },
+  "competitor_map": {
+    "nordvpn": ["expressvpn", "surfshark", "cyberghost"],
+    "expressvpn": ["nordvpn", "surfshark", "privateinternetaccess"],
+    "surfshark": ["nordvpn", "expressvpn", "ipvanish"]
+  }
+}

@@ -1,0 +1,46 @@
+---
+interface Props {
+  moneyBackDays?: number;
+  showAudit?: boolean;
+  auditor?: string;
+  mediaMentions?: string[];
+  showEncryption?: boolean;
+}
+const { moneyBackDays = 30, showAudit = false, auditor, mediaMentions = [], showEncryption = true } = Astro.props;
+---
+<div class="trust-row">
+  {moneyBackDays > 0 && (
+    <div class="trust-badge">
+      <span class="trust-icon">🛡</span>
+      <span>{moneyBackDays}天退款保证</span>
+    </div>
+  )}
+  {showEncryption && (
+    <div class="trust-badge">
+      <span class="trust-icon">🔒</span>
+      <span>AES-256加密</span>
+    </div>
+  )}
+  {showAudit && auditor && (
+    <div class="trust-badge">
+      <span class="trust-icon">✓</span>
+      <span>{auditor}审计</span>
+    </div>
+  )}
+  {mediaMentions.slice(0, 4).map(m => (
+    <div class="trust-badge trust-media">
+      <span>{m}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+.trust-row  { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:16px 0; }
+.trust-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 14px; background:var(--surface,#f0fdf4); border:1px solid #bbf7d0;
+  border-radius:20px; font-size:13px; font-weight:500; color:#15803d; white-space:nowrap;
+}
+.trust-media{ background:var(--surface,#f9fafb); border-color:#e5e7eb; color:var(--text-secondary,#4b5563); font-style:italic; }
+.trust-icon { font-size:14px; }
+</style>

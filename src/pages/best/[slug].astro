@@ -1,0 +1,49 @@
+---
+/**
+ * pages/best/[slug].astro
+ * 专题榜单页动态路由
+ */
+import { getCollection, getEntry } from 'astro:content';
+
+import BestOfTech       from '../../layouts/best-of/BestOfTech.astro';
+import BestOfHome       from '../../layouts/best-of/BestOfHome.astro';
+import BestOfFood       from '../../layouts/best-of/BestOfFood.astro';
+import BestOfPet        from '../../layouts/best-of/BestOfPet.astro';
+import BestOfElectronic from '../../layouts/best-of/BestOfElectronic.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => data.page_type === 'best-of' && data.meta.published);
+  return pages.map(page => ({
+    params: { slug: page.data.slug },
+    props: { pageData: page.data },
+  }));
+}
+
+const { pageData } = Astro.props;
+
+// 榜单页可能没有单一 product_ref，需要加载所有产品
+const allProducts = await getCollection('products');
+const allPages    = await getCollection('pages', ({ data }) => data.meta.published);
+
+// 如果有主产品引用也加载
+const productEntry = pageData.product_ref
+  ? await getEntry('products', pageData.product_ref).catch(() => null)
+  : null;
+
+const layoutMap: Record<string, any> = {
+  tech:       BestOfTech,
+  home:       BestOfHome,
+  food:       BestOfFood,
+  pet:        BestOfPet,
+  electronic: BestOfElectronic,
+};
+const Layout = layoutMap[pageData.template_style] ?? BestOfTech;
+
+const product = productEntry?.data ?? null;
+---
+<Layout
+  page={pageData}
+  product={product}
+  allPages={allPages}
+  allProducts={allProducts}
+/>

@@ -1,0 +1,96 @@
+{
+  "slug": "nordvpn-coupon",
+  "page_type": "deal",
+  "template_style": "tech",
+  "product_ref": "nordvpn",
+
+  "seo": {
+    "title": "NordVPN 优惠码 2025年6月：独家67%折扣，限时到月底",
+    "description": "最新NordVPN优惠码SAVE67，购买2年套餐立省67%，折后$3.99/月。已验证可用，附30天退款保证。",
+    "keywords": {
+      "primary": "nordvpn优惠码",
+      "secondary": ["nordvpn折扣", "nordvpn优惠", "nordvpn最低价", "nordvpn coupon"],
+      "lsi": ["vpn优惠码", "vpn折扣", "nordvpn 2025折扣"],
+      "long_tail": ["nordvpn有没有优惠码", "nordvpn怎么便宜买", "nordvpn黑五折扣"],
+      "negative": ["nordvpn免费", "nordvpn破解"]
+    },
+    "on_page": {
+      "h1": "NordVPN 优惠码 2025年6月：独家67%折扣，限时到月底",
+      "h2_list": [
+        "最新可用优惠码：SAVE67（已验证）",
+        "如何使用NordVPN优惠码？3步完成",
+        "NordVPN各套餐折后价格对比",
+        "优惠码常见问题"
+      ],
+      "url_slug": "nordvpn-coupon",
+      "keyword_in_first_100_words": true,
+      "image_alts": ["NordVPN优惠码使用截图", "NordVPN折扣价格", "NordVPN套餐对比"]
+    },
+    "schema": {
+      "type": "Product",
+      "item_reviewed_name": "NordVPN 2年套餐",
+      "item_reviewed_type": "SoftwareApplication",
+      "rating_value": 4.8,
+      "rating_count": 18742,
+      "best_rating": 5,
+      "worst_rating": 1,
+      "review_body_summary": "NordVPN当前提供67%折扣，是年内最低价，30天退款保证，无购买风险。"
+    },
+    "canonical": "/deals/nordvpn-coupon",
+    "og_image": "/images/og/nordvpn-coupon.png",
+    "og_title": "NordVPN优惠码2025：独家67%折扣码（已验证）",
+    "og_description": "NordVPN最新优惠码，立省67%，折后$3.99/月起。限时优惠，随时结束。",
+    "index": true,
+    "follow": true,
+    "priority": 0.8,
+    "changefreq": "daily"
+  },
+
+  "hero": {
+    "headline": "NordVPN 优惠码 2025年6月：独家67%折扣，限时到月底",
+    "subheadline": "已验证可用 · 折后$3.99/月 · 30天退款保证",
+    "coupon_code": "SAVE67",
+    "discount_pct": 67,
+    "original_price": "11.99",
+    "deal_price": "3.99",
+    "cta_primary_text": "立即领取67%折扣",
+    "cta_primary_urgency": "限时优惠，随时结束",
+    "show_countdown": true,
+    "expires": "2025-06-30",
+    "badge_text": "独家优惠"
+  },
+
+  "how_to_use": [
+    { "step": 1, "text": "点击下方按钮，跳转NordVPN官网" },
+    { "step": 2, "text": "选择2年套餐，折扣自动应用" },
+    { "step": 3, "text": "完成支付，立即开始使用" }
+  ],
+
+  "faqs": [
+    {
+      "q": "NordVPN优惠码SAVE67还有效吗？",
+      "a": "是的，截至2025年6月30日仍然有效，已验证可正常使用。",
+      "keyword": "nordvpn优惠码有效"
+    },
+    {
+      "q": "NordVPN优惠码可以用在所有套餐上吗？",
+      "a": "该优惠码适用于2年套餐，购买时折扣会自动应用，无需手动输入。",
+      "keyword": "nordvpn优惠码使用范围"
+    },
+    {
+      "q": "NordVPN优惠购买后不满意能退款吗？",
+      "a": "可以。所有套餐均享有30天无理由退款保障，联系客服即可全额退款。",
+      "keyword": "nordvpn退款"
+    }
+  ],
+
+  "related_pages": ["nordvpn-review", "best-vpn-2025"],
+
+  "meta": {
+    "publish_date": "2025-01-01",
+    "update_date": "2025-06-01",
+    "update_reason": "更新最新有效优惠码",
+    "author": "admin",
+    "published": true
+  }
+}

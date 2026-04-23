@@ -1,0 +1,6 @@
+---
+import HowToTech from './HowToTech.astro';
+interface Props { page: any; product: any; reviews?: any; allPages?: any[]; }
+const { page, product, reviews, allPages } = Astro.props;
+---
+<HowToTech page={page} product={product} reviews={reviews} allPages={allPages} />
