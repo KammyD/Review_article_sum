@@ -5,15 +5,19 @@
   "scripts": {
     "dev": "astro dev",
     "build": "npx tsx scripts/validate-seo.ts && astro build",
-    "preview": "astro preview",
+    "preview": "npm run build && wrangler dev",
     "validate-seo": "npx tsx scripts/validate-seo.ts",
-    "generate-pages": "npx tsx scripts/generate-pages.ts"
+    "generate-pages": "npx tsx scripts/generate-pages.ts",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "11",
     "astro": "^4.0.0"
   },
   "devDependencies": {
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "wrangler": "^4.84.1"
   }
 }
