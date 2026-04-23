@@ -1,8 +1,12 @@
 {
   name = "review1"
-  main = "public/index.html"
-  compatibility_date = "2025-01-01"
+compatibility_date = "2025-01-01"
 
-   [assets]
-   directory = "./"
+[assets]
+directory = "./"
+
+[[routes]]
+pattern = "ict10.top"
+zone_name = "ict10.top"
+custom_domain = true
 }
