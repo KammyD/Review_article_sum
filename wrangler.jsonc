@@ -1,0 +1,8 @@
+{
+  name = "review1"
+  main = "public/index.html"
+  compatibility_date = "2025-01-01"
+
+   [assets]
+   directory = "./"
+}
